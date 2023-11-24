@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('full_name');
+            $table->ulid('id')->primary();
+            $table->string('fullname');
             $table->string('sur_name')->nullable();
             $table->string('given_name')->nullable();
             $table->string('slug');
@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->enum('role', ["user", "admin"])->default("user");
             $table->rememberToken();
-            $table->timestamps();
+            $table->string('created_at')->length(50);
+            $table->string('updated_at')->length(50);
         });
     }
 

@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('media', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->ulid('id')->primary();
             $table->string('file_url');
+            $table->enum('type', ['avatar', 'cover', 'image', 'video']);
             
-            $table->timestamps();
+            $table->string('created_at')->length(50);
+            $table->string('updated_at')->length(50);
         });
     }
 

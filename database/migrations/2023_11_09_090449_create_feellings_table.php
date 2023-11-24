@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('feellings', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->ulid('id')->primary();
             $table->string('name');
             $table->string('icon_url');
-            $table->timestamps();
+            $table->string('created_at')->length(50);
+            $table->string('updated_at')->length(50);
         });
     }
 

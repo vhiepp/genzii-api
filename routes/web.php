@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Models\Account;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return response()->json([
-        'message' => 'Hello World'
-    ]);
+    // Account::create([
+    //     'username' => '029183',
+    //     'password' => 'ajdoaw',
+    //     'user_id' => 'adwid'
+    // ]);
+    
+    
 });
+
+

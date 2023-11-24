@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('page_likes', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->ulid('id')->primary();
             $table->string('page_id');
             $table->string('user_id');
-            $table->timestamps();
+            $table->string('created_at')->length(50);
+            $table->string('updated_at')->length(50);
         });
     }
 

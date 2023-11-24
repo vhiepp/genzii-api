@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts_hashtags', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->ulid('id')->primary();
             $table->string('post_id');
             $table->string('hashtag_id');
-            $table->timestamps();
+            $table->string('created_at')->length(50);
+            $table->string('updated_at')->length(50);
         });
     }
 
