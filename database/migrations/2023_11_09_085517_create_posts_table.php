@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->longText('description');
             $table->enum('status', ['showing', 'waiting', 'deleted', 'hidden'])->default('waiting');
-            $table->enum('limit', ['all', 'friend', 'only_me'])->default('all');
+            $table->enum('limit', ['all', 'friends', 'only_me'])->default('all');
             $table->string('created_at', 20);
             $table->string('updated_at', 20);
         });

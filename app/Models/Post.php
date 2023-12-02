@@ -11,8 +11,9 @@ class Post extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'content',
-        'status'
+        'description',
+        'status',
+        'limit'
     ];
 
     protected $casts = [

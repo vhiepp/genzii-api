@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use \App\Models\User;
+use Mockery\Exception;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -12,11 +14,18 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $count = 100;
-        for ($i = 1; $i <= 1; $i++) {
-            User::factory($count)->create();
-            echo "User đã tạo: " . $i * $count . "\n";
+        echo "Đang tạo user...\n";
+        $count = 200;
+        $jump = 10;
+        $sum = 0;
+        for ($i = 1; $i <= $count/$jump; $i++) {
+            try {
+                User::factory($jump)->create();
+                if ($i > 1) echo "\033[F\033[K";
+                echo "User đã tạo: " . ($sum += $jump) . "\n";
+            } catch (Exception $err) {}
         }
-        echo "Đã tạo user. \n";
+        echo "Đã tạo " . $sum . " user. \n";
+        echo "Tạo thất bại " . ($count - $sum) . " user. \n";
     }
 }
