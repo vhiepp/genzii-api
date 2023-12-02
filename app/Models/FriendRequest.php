@@ -4,20 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class UserPost extends Model
+class FriendRequest extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     protected $fillable = [
-        'user_author_id',
-        'posts_id'
+        'user_request_id',
+        'user_is_requested_id',
+        'status'
     ];
 
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp'
+    ];
+    protected $hidden = [
+        'user_request_id',
+        'user_is_requested_id'
     ];
 
     protected $dateFormat = 'U';

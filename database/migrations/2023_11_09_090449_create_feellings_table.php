@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feellings', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('name');
+        Schema::create('feelings', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name', 50);
             $table->string('icon_url');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+            $table->string('created_at', 20);
+            $table->string('updated_at', 20);
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feellings');
+        Schema::dropIfExists('feelings');
     }
 };

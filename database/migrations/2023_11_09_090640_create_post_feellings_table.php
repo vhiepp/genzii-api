@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_feellings', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('posts_id');
-            $table->string('feelling_id');
-            $table->string('user_id');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+        Schema::create('post_feelings', function (Blueprint $table) {
+            $table->string('posts_id', 36);
+            $table->string('feeling_id', 36);
+            $table->string('user_id', 36);
         });
     }
 
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_feellings');
+        Schema::dropIfExists('post_feelings');
     }
 };

@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('page_likes', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('page_id');
-            $table->string('user_id');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+        Schema::create('user_friends', function (Blueprint $table) {
+            $table->string('user_one_id', 36);
+            $table->string('user_two_id', 36);
+            $table->enum('status', ['friend', 'unfriended'])->default('friend');
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('page_likes');
+        Schema::dropIfExists('user_friends');
     }
 };

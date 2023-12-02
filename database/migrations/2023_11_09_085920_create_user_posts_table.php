@@ -12,11 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_posts', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('user_author_id');
-            $table->string('posts_id');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+            $table->string('user_author_id', 36);
+            $table->string('posts_id', 36);
         });
     }
 

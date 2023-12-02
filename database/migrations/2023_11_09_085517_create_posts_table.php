@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->longText('content');
-            $table->enum('status', ["showing", "waiting", "deleted", "hidden"])->default("waiting");
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+            $table->uuid('id')->primary();
+            $table->longText('description');
+            $table->enum('status', ['showing', 'waiting', 'deleted', 'hidden'])->default('waiting');
+            $table->enum('limit', ['all', 'friend', 'only_me'])->default('all');
+            $table->string('created_at', 20);
+            $table->string('updated_at', 20);
         });
     }
 

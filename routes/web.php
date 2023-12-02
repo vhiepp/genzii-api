@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Account;
+use App\Models\User;
+use App\Models\Friend;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,13 +16,7 @@ use App\Models\Account;
 */
 
 Route::get('/', function () {
-    // Account::create([
-    //     'username' => '029183',
-    //     'password' => 'ajdoaw',
-    //     'user_id' => 'adwid'
-    // ]);
-    
-    
+    $user = User::find('9ac0c2cd-0e2d-4850-b48b-82575e6f6b52');
+    $friends = $user->friends()->paginate(1);
+    return response()->json($friends);
 });
-
-

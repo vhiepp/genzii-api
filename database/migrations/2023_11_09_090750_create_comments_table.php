@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->uuid('id')->primary();
             $table->longText('content');
-            $table->string('user_author_id');
-            $table->string('comment_feedback_id');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+            $table->string('user_author_id', 36);
+            $table->string('created_at', 20);
+            $table->string('updated_at', 20);
         });
     }
 

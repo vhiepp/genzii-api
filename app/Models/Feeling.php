@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
-class Page extends Model
+class Feeling extends Model
 {
-    use HasFactory, HasUlids;
+    use HasFactory;
 
     protected $fillable = [
         'name',
-        'user_author_id',
-        'slogan'
+        'icon_url'
     ];
 
-    protected $dateFormat = 'U';
+    protected $casts = [
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
 }

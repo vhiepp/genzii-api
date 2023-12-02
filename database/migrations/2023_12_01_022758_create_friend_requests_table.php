@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('page_stories', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('page_id');
-            $table->string('story_id');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+        Schema::create('friend_requests', function (Blueprint $table) {
+            $table->string('user_request_id', 36);
+            $table->string('user_is_requested_id', 36);
+            $table->enum('status', ['await', 'agreed', 'disagree', 'cancelled'])->default('await');
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('page_stories');
+        Schema::dropIfExists('friend_requests');
     }
 };

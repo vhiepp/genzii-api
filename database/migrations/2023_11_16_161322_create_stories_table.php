@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stories', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('content');
-            $table->string('media_id');
-            $table->string('created_at')->length(50);
-            $table->string('updated_at')->length(50);
+            $table->uuid('id')->primary();
+            $table->longText('description');
+            $table->string('media_id', 36);
+            $table->string('created_at', 20);
+            $table->string('updated_at', 20);
         });
     }
 
