@@ -24,6 +24,7 @@ Route::middleware('api')->group(function () {
         Route::post('profile', [AuthController::class, 'profile']);
 
         Route::post('sign-in-with-firebase', [AuthController::class, 'signInWithFirebase']);
+        Route::post('sign-out', [AuthController::class, 'signOut']);
 
     });
 });

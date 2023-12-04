@@ -115,11 +115,15 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function signOut()
     {
         auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        $cookie = cookie()->forget('token');
+        return response()->json([
+            'message' => 'Successfully logged out',
+            'error' => false,
+            'status' => 'success'
+        ], 200)->cookie($cookie);
     }
 
     /**
