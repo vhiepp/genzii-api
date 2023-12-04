@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 
@@ -40,59 +42,63 @@ class AuthController extends Controller
             $encoded_payload = $token[1];
             $decoded_payload = base64_decode($encoded_payload);
             $payload = json_decode($decoded_payload, true);
-//            dd($payload);
-            if ($payload['exp'] >= time()) {
+//            if ($payload['exp'] >= time()) {
                 $provider = $payload['firebase']['sign_in_provider'];
                 $providerId = $payload['firebase']['identities'][$provider][0];
 
+                $account = Account::whereProvider([
+                    'provider' => $provider,
+                    'provider_id' => $providerId,
+                    'username' => $payload['email']
+                ])->first();
+
+                if ($account) {
+                    $user = $account->user;
+                } else {
+                    $user = User::where('email', $payload['email'])->first();
+                    if ($user == null) {
+                        $user = User::create([
+                            'full_name' => $payload['name'],
+                            'firstname' => $payload['name'],
+                            'lastname' => '',
+                            'email' => $payload['email']
+                        ]);
+                    }
+                    $user->accounts()->create([
+                        'username' => $payload['email'],
+                        'password' => rand() . env('JWT_SECRET', '.') . rand(),
+                        'provider' => $provider,
+                        'provider_id' => $providerId
+                    ]);
+                }
+//            }
+            $token = auth()->tokenById($user->id);
+            if (!$token) {
+                return response()->json([
+                    'is_valid' => false,
+                    'error' => true,
+                    'message' => 'Unauthorized',
+                    'auth' => null
+                ], 401);
             }
-
-
-
-//            $user = User::where('provider', $provider)
-//                ->where('provider_id', $providerId)
-//                ->first();
-//            if (!$user) {
-//                $email = explode("@", $request->input('providerData')[0]['email']);
-//                $mssv = '';
-//                if ($email[1] == 'st.tvu.edu.vn') {
-//                    $mssv = $email[0];
-//                }
-//                $avatar = $request->input('providerData')[0]['photoURL']
-//                    ? $request->input('providerData')[0]['photoURL']
-//                    : env('APP_URL') . '/assets/images/avatars/avatar_' . rand(1, 24) . '.jpg';
-//                $name = explode(" ", $request->input('providerData')[0]['displayName'], 2);
-//                $user = User::create([
-//                    'fullname' => $request->input('providerData')[0]['displayName'],
-//                    'sur_name' => !empty($name[0]) ? $name[0] : '',
-//                    'given_name' => !empty($name[1]) ? $name[1] : '',
-//                    'phone' => $request->input('providerData')[0]['phoneNumber'],
-//                    'email' => $request->input('providerData')[0]['email'],
-//                    'stu_code' => $mssv,
-//                    'provider' => $provider,
-//                    'provider_id' => $providerId,
-//                    'avatar' => $avatar,
-//                    'role' => 'student',
-//                    'password' => rand(),
-//                ]);
-//            }
-//
-//            $token = auth()->tokenById($user['id']);
-//            if (!$token) {
-//                return response()->json(['error' => 'Unauthorized'], 401);
-//            }
-//            $cookie = cookie('token', $token, auth()->factory()->getTTL());
-//            return response()->json([
-//                'is_valid' => true,
-//                'user' => $user
-//            ])->cookie($cookie);
-
-        } catch (Exception $exception) {
+            $cookie = cookie('token', $token, auth()->factory()->getTTL());
             return response()->json([
-                'error' => true,
-                'message' => 'error'
-            ]);
-        }
+                'is_valid' => true,
+                'error' => false,
+                'message' => '',
+                'auth' => [
+                    'user' => $user,
+                    'access_token' => $token,
+                    'expires_in' => time() + (auth()->factory()->getTTL() * 60)
+                ]
+            ])->cookie($cookie);
+        } catch (Exception $exception) {}
+        return response()->json([
+            'is_valid' => false,
+            'error' => true,
+            'message' => 'error',
+            'auth' => null
+        ]);
     }
     /**
      * Get the authenticated User.

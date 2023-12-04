@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class Account extends Model
 {
@@ -14,7 +15,9 @@ class Account extends Model
     protected $fillable = [
         'username',
         'password',
-        'user_id'
+        'user_id',
+        'provider',
+        'provider_id'
     ];
 
     protected $hidden = [
@@ -33,4 +36,10 @@ class Account extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function scopeWhereProvider(Builder $query, $provider) {
+        $query->where('username', $provider['username'])->where('provider', $provider['provider'])->where('provider_id', $provider['provider_id']);
+    }
+
+
 }
