@@ -15,6 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('username', 50);
             $table->string('password');
+            $table->string('provider', 30);
+            $table->string('provider_id');
             $table->string('user_id', 36);
             $table->string('created_at', 20);
             $table->string('updated_at', 20);

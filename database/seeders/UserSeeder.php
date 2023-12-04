@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         echo "Đang tạo user...\n";
-        $count = 200;
+        $count = 20;
         $jump = 10;
         $sum = 0;
         for ($i = 1; $i <= $count/$jump; $i++) {

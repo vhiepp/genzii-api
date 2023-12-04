@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Support\Str;
-use Hamcrest\Core\IsTypeOf;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasUuids, Sluggable;
@@ -152,5 +151,25 @@ class User extends Authenticatable
                 },
             ]
         ];
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier(): string
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 }
