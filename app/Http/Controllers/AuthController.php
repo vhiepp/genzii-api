@@ -92,7 +92,7 @@ class AuthController extends Controller
                     'expires_in' => time() + (auth()->factory()->getTTL() * 60)
                 ]
             ])->cookie($cookie);
-        } catch (Exception $exception) {}
+        } catch (\Exception $exception) {}
         return response()->json([
             'is_valid' => false,
             'error' => true,
