@@ -16,7 +16,7 @@ class Authenticate
 //        return $request->expectsJson() ? null : route('login');
 //    }
 
-    public function handle(Request $request, \Closure $next): Response
+    public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check()) {
             $response = $next($request);

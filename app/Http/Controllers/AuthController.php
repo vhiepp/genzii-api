@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function signInWithFirebase(Request $request)
     {
         try {
-            $token = explode('.', $request->access_token);
+            $token = explode('.', $request->firebase_access_token);
             $encoded_payload = $token[1];
             $decoded_payload = base64_decode($encoded_payload);
             $payload = json_decode($decoded_payload, true);
