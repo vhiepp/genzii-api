@@ -27,7 +27,7 @@ class FriendSeeder extends Seeder
             }
         }
         echo "Đã tạo " . $sum . " lời mời kết bạn. \n";
-        $friendRequests = FriendRequest::inRandomOrder()->limit(rand($sum/2, $sum))->get();
+        $friendRequests = FriendRequest::inRandomOrder()->limit(rand($sum/4, $sum/2))->get();
         $sum = 0;
         foreach ($friendRequests as $friendRequest) {
             $userService->addFriend($friendRequest->user_request_id, $friendRequest->user_is_requested_id);
