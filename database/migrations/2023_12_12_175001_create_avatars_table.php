@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('avatars', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('url');
             $table->string('user_id', 36);
-            $table->boolean('current')->default(true);
+            $table->boolean('current');
             $table->string('created_at', 20);
             $table->string('updated_at', 20);
         });

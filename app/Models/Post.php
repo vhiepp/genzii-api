@@ -22,4 +22,9 @@ class Post extends Model
     ];
 
     protected $dateFormat = 'U';
+
+    protected $attributes = [
+        'limit' => 'all',
+        'status' => 'waiting'
+    ];
 }

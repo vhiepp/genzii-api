@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -58,6 +59,24 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $dateFormat = 'U';
+
+    protected $attributes = [
+        'gender' => 'other',
+        'role' => 'user'
+    ];
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            $user->avatars()->create();
+        });
+
+        static::retrieved(function ($user) {
+            $user->currentAvatar;
+        });
+    }
 
     public function accounts(): HasMany
     {
@@ -121,6 +140,16 @@ class User extends Authenticatable implements JWTSubject
             return true;
         }
         return false;
+    }
+
+    public function avatars(): HasMany
+    {
+        return $this->hasMany(Avatar::class, 'user_id', 'id');
+    }
+
+    public function currentAvatar(): HasOne
+    {
+        return $this->hasOne(Avatar::class, 'user_id', 'id')->where('current', true);
     }
 
     /**

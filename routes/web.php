@@ -18,5 +18,6 @@ use Firebase\JWT\Key;
 
 
 Route::get('/', function () {
-
+    $user = User::all()->first();
+    return response()->json($user);
 });
