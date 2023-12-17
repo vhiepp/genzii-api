@@ -33,6 +33,17 @@ class Avatar extends Model
         'current' => true,
     ];
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::retrieved(function ($avatar) {
+            if (!str()->isUrl($avatar->url)) {
+                $avatar->url = env('APP_URL') . $avatar->url;
+            }
+        });
+    }
+
     public function user():BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
