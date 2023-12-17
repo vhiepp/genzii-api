@@ -28,30 +28,29 @@ class UserController extends Controller
                     'status' => 'success',
                     'message' => '',
                     'error' => false,
-                    'profile' => $user,
-                    'posts_total' => [
-                        'count' => $posts_total,
-                        'count_short' => numberhelper()->abbreviateNumber($posts_total),
-                    ],
-                    'followers_total' => [
-                        'count' => $followers_total,
-                        'count_short' => numberhelper()->abbreviateNumber($followers_total),
-                    ],
-                    'following_total' => [
-                        'count' => $following_total,
-                        'count_short' => numberhelper()->abbreviateNumber($following_total),
-                    ],
+                    'data' => [
+                        'profile' => $user,
+                        'posts' => [
+                            'total' => $posts_total,
+                            'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                        ],
+                        'followers' => [
+                            'total' => $followers_total,
+                            'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                        ],
+                        'following' => [
+                            'total' => $following_total,
+                            'total_short' => numberhelper()->abbreviateNumber($following_total),
+                        ],
+                    ]
                 ]);
             }
         } catch (\Exception $exception) {}
         return response()->json([
-            'status' => 'error',
+            'status' => '404',
             'message' => 'Error or not found user',
             'error' => true,
-            'profile' => null,
-            'posts_total' => null,
-            'followers_total' => null,
-            'following_total' => null
+            'data' => null,
         ]);
     }
 }

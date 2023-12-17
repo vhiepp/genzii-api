@@ -38,14 +38,27 @@ class AuthController extends Controller
                 $token = auth()->tokenById($user->id);
                 if ($token) {
                     $cookie = cookie('token', $token, auth()->factory()->getTTL());
+                    $posts_total = $user->posts()->count();
+                    $followers_total = $user->followers()->count();
+                    $following_total = $user->following()->count();
                     return response()->json([
                         'is_valid' => true,
                         'error' => false,
                         'message' => '',
-                        'auth' => [
+                        'data' => [
                             'profile' => $user,
-                            'access_token' => $token,
-                            'expires_in' => time() + (auth()->factory()->getTTL() * 60)
+                            'posts' => [
+                                'total' => $posts_total,
+                                'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                            ],
+                            'followers' => [
+                                'total' => $followers_total,
+                                'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                            ],
+                            'following' => [
+                                'total' => $following_total,
+                                'total_short' => numberhelper()->abbreviateNumber($following_total),
+                            ],
                         ]
                     ])->cookie($cookie);
                 }
@@ -56,7 +69,7 @@ class AuthController extends Controller
             'is_valid' => false,
             'error' => true,
             'message' => 'Error, could be due to wrong email or password',
-            'auth' => null
+            'data' => null
         ], 401);
     }
 
@@ -67,7 +80,7 @@ class AuthController extends Controller
             $encoded_payload = $token[1];
             $decoded_payload = base64_decode($encoded_payload);
             $payload = json_decode($decoded_payload, true);
-            if ($payload['exp'] >= time()) {
+            if ((env('APP_ENV') == 'production' && $payload['exp'] >= time()) || env('APP_ENV') == 'local') {
                 $provider = $payload['firebase']['sign_in_provider'];
                 $providerId = $payload['firebase']['identities'][$provider][0];
 
@@ -103,18 +116,31 @@ class AuthController extends Controller
                     'is_valid' => false,
                     'error' => true,
                     'message' => 'Unauthorized',
-                    'auth' => null
+                    'data' => null
                 ], 401);
             }
             $cookie = cookie('token', $token, auth()->factory()->getTTL());
+            $posts_total = $user->posts()->count();
+            $followers_total = $user->followers()->count();
+            $following_total = $user->following()->count();
             return response()->json([
                 'is_valid' => true,
                 'error' => false,
                 'message' => 'Successfully sign in',
-                'auth' => [
+                'data' => [
                     'profile' => $user,
-                    'access_token' => $token,
-                    'expires_in' => time() + (auth()->factory()->getTTL() * 60)
+                    'posts' => [
+                        'total' => $posts_total,
+                        'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                    ],
+                    'followers' => [
+                        'total' => $followers_total,
+                        'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                    ],
+                    'following' => [
+                        'total' => $following_total,
+                        'total_short' => numberhelper()->abbreviateNumber($following_total),
+                    ],
                 ]
             ])->cookie($cookie);
         } catch (\Exception $exception) {}
@@ -122,7 +148,7 @@ class AuthController extends Controller
             'is_valid' => false,
             'error' => true,
             'message' => 'error',
-            'auth' => null
+            'data' => null
         ]);
     }
     /**
@@ -132,7 +158,30 @@ class AuthController extends Controller
      */
     public function profile()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        $posts_total = $user->posts()->count();
+        $followers_total = $user->followers()->count();
+        $following_total = $user->following()->count();
+        return response()->json([
+            'is_valid' => false,
+            'error' => true,
+            'message' => 'error',
+            'data' => [
+                'profile' => $user,
+                'posts' => [
+                    'total' => $posts_total,
+                    'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                ],
+                'followers' => [
+                    'total' => $followers_total,
+                    'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                ],
+                'following' => [
+                    'total' => $following_total,
+                    'total_short' => numberhelper()->abbreviateNumber($following_total),
+                ],
+            ]
+        ]);
     }
 
     /**
@@ -147,33 +196,9 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully sign out',
             'error' => false,
-            'status' => 'success'
+            'status' => 'success',
+            'data' => null
         ], 200)->cookie($cookie);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
-    }
 }
