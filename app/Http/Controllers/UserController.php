@@ -25,6 +25,7 @@ class UserController extends Controller
                 $followers_total = $user->followers()->count();
                 $following_total = $user->following()->count();
                 return response()->json([
+                    'is_valid' => true,
                     'status' => 'success',
                     'message' => '',
                     'error' => false,
@@ -47,7 +48,8 @@ class UserController extends Controller
             }
         } catch (\Exception $exception) {}
         return response()->json([
-            'status' => '404',
+            'is_valid' => false,
+            'status' => 'not_found',
             'message' => 'Error or not found user',
             'error' => true,
             'data' => null,

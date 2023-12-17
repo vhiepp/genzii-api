@@ -42,6 +42,7 @@ class AuthController extends Controller
                     $followers_total = $user->followers()->count();
                     $following_total = $user->following()->count();
                     return response()->json([
+                        'status' => 'success',
                         'is_valid' => true,
                         'error' => false,
                         'message' => '',
@@ -66,6 +67,7 @@ class AuthController extends Controller
         try {
         } catch (Exception $exception) { }
         return response()->json([
+            'status' => 'error',
             'is_valid' => false,
             'error' => true,
             'message' => 'Error, could be due to wrong email or password',
@@ -113,6 +115,7 @@ class AuthController extends Controller
             $token = auth()->tokenById($user->id);
             if (!$token) {
                 return response()->json([
+                    'status' => 'error',
                     'is_valid' => false,
                     'error' => true,
                     'message' => 'Unauthorized',
@@ -124,6 +127,7 @@ class AuthController extends Controller
             $followers_total = $user->followers()->count();
             $following_total = $user->following()->count();
             return response()->json([
+                'status' => 'success',
                 'is_valid' => true,
                 'error' => false,
                 'message' => 'Successfully sign in',
@@ -145,6 +149,7 @@ class AuthController extends Controller
             ])->cookie($cookie);
         } catch (\Exception $exception) {}
         return response()->json([
+            'status' => 'error',
             'is_valid' => false,
             'error' => true,
             'message' => 'error',
@@ -163,9 +168,10 @@ class AuthController extends Controller
         $followers_total = $user->followers()->count();
         $following_total = $user->following()->count();
         return response()->json([
-            'is_valid' => false,
-            'error' => true,
-            'message' => 'error',
+            'status' => 'success',
+            'is_valid' => true,
+            'error' => false,
+            'message' => '',
             'data' => [
                 'profile' => $user,
                 'posts' => [
@@ -194,6 +200,7 @@ class AuthController extends Controller
         auth()->logout();
         $cookie = cookie()->forget('token');
         return response()->json([
+            'is_valid' => true,
             'message' => 'Successfully sign out',
             'error' => false,
             'status' => 'success',
