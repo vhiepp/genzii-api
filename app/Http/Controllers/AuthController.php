@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Mockery\Exception;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -16,7 +17,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'signInWithFirebase']]);
+        $this->middleware('auth:api', ['except' => ['signInWithEmailPassword', 'signInWithFirebase', ]]);
     }
 
     /**
@@ -24,15 +25,39 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function signInWithEmailPassword(Request $request)
     {
-        $credentials = request(['email', 'password']);
+            $account = Account::whereProvider([
+                'provider' => 'email/password',
+                'provider_id' => $request->email,
+                'username' => $request->email,
+            ])->first();
+            if ($account && Hash::check($request->password, $account->password)) {
+                $user = $account->user;
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token);
+                $token = auth()->tokenById($user->id);
+                if ($token) {
+                    $cookie = cookie('token', $token, auth()->factory()->getTTL());
+                    return response()->json([
+                        'is_valid' => true,
+                        'error' => false,
+                        'message' => '',
+                        'auth' => [
+                            'profile' => $user,
+                            'access_token' => $token,
+                            'expires_in' => time() + (auth()->factory()->getTTL() * 60)
+                        ]
+                    ])->cookie($cookie);
+                }
+            }
+        try {
+        } catch (Exception $exception) { }
+        return response()->json([
+            'is_valid' => false,
+            'error' => true,
+            'message' => 'Error, could be due to wrong email or password',
+            'auth' => null
+        ], 401);
     }
 
     public function signInWithFirebase(Request $request)
@@ -42,14 +67,14 @@ class AuthController extends Controller
             $encoded_payload = $token[1];
             $decoded_payload = base64_decode($encoded_payload);
             $payload = json_decode($decoded_payload, true);
-//            if ($payload['exp'] >= time()) {
+            if ($payload['exp'] >= time()) {
                 $provider = $payload['firebase']['sign_in_provider'];
                 $providerId = $payload['firebase']['identities'][$provider][0];
 
                 $account = Account::whereProvider([
                     'provider' => $provider,
                     'provider_id' => $providerId,
-                    'username' => $payload['email']
+                    'username' => $provider . '-' . $payload['email']
                 ])->first();
 
                 if ($account) {
@@ -65,13 +90,13 @@ class AuthController extends Controller
                         ]);
                     }
                     $user->accounts()->create([
-                        'username' => $payload['email'],
+                        'username' => $provider . '-' . $payload['email'],
                         'password' => rand() . env('JWT_SECRET', '.') . rand(),
                         'provider' => $provider,
                         'provider_id' => $providerId
                     ]);
                 }
-//            }
+            }
             $token = auth()->tokenById($user->id);
             if (!$token) {
                 return response()->json([
@@ -85,9 +110,9 @@ class AuthController extends Controller
             return response()->json([
                 'is_valid' => true,
                 'error' => false,
-                'message' => '',
+                'message' => 'Successfully sign in',
                 'auth' => [
-                    'user' => $user,
+                    'profile' => $user,
                     'access_token' => $token,
                     'expires_in' => time() + (auth()->factory()->getTTL() * 60)
                 ]
@@ -120,7 +145,7 @@ class AuthController extends Controller
         auth()->logout();
         $cookie = cookie()->forget('token');
         return response()->json([
-            'message' => 'Successfully logged out',
+            'message' => 'Successfully sign out',
             'error' => false,
             'status' => 'success'
         ], 200)->cookie($cookie);

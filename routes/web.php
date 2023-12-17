@@ -1,10 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Account;
-use App\Models\User;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +14,5 @@ use Firebase\JWT\Key;
 
 
 Route::get('/', function () {
-    $user = User::all()->first();
-    return response()->json($user);
+
 });

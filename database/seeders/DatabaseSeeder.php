@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            FriendSeeder::class
+            FriendSeeder::class,
+            FollowSeeder::class,
         ]);
 
         echo "Ok!\n";

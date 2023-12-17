@@ -83,11 +83,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Account::class, 'user_id', 'id');
     }
 
-//    public function friends(): BelongsToMany
-//    {
-//        return $this->belongsToMany(User::class, 'friends', 'user_one_id', 'user_two_id');
-//    }
-
     /**
      * This section manages outgoing friend requests initiated
      * by the current user. These requests are invitations sent
@@ -120,7 +115,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function friends(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, UserFriend::class, 'user_one_id', 'user_two_id', 'id', 'id', 'hihi')->withPivotValue(['status' => 'friend']);
+        return $this->belongsToMany(User::class, UserFriend::class, 'user_one_id', 'user_two_id', 'id', 'id')->withPivotValue(['status' => 'friend']);
     }
 
     /**
@@ -142,6 +137,18 @@ class User extends Authenticatable implements JWTSubject
         return false;
     }
 
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'user_is_followed_id', 'user_follower_id', 'id', 'id')->withPivotValue(['status' => 'followed']);
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'user_follower_id', 'user_is_followed_id', 'id', 'id')->withPivotValue(['status' => 'followed']);
+    }
+
+
+
     public function avatars(): HasMany
     {
         return $this->hasMany(Avatar::class, 'user_id', 'id');
@@ -150,6 +157,11 @@ class User extends Authenticatable implements JWTSubject
     public function currentAvatar(): HasOne
     {
         return $this->hasOne(Avatar::class, 'user_id', 'id')->where('current', true);
+    }
+
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'user_posts', 'user_author_id', 'post_id', 'id', 'id');
     }
 
     /**
