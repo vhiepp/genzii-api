@@ -137,6 +137,11 @@ class User extends Authenticatable implements JWTSubject
         return false;
     }
 
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'id');
+    }
+
     public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_follows', 'user_is_followed_id', 'user_follower_id', 'id', 'id')->withPivotValue(['status' => 'followed']);

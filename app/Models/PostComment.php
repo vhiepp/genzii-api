@@ -11,7 +11,7 @@ class PostComment extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'posts_id',
+        'post_id',
         'comment_id'
     ];
 

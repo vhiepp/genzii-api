@@ -17,9 +17,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['signInWithEmailPassword', 'signInWithFirebase', ]]);
+        $this->middleware('auth:api', ['except' => ['signInWithEmailPassword', 'signInWithFirebase']]);
     }
-
     /**
      * Get a JWT via given credentials.
      *
@@ -74,13 +73,11 @@ class AuthController extends Controller
             if ((env('APP_ENV') == 'production' && $payload['exp'] >= time()) || env('APP_ENV') == 'local') {
                 $provider = $payload['firebase']['sign_in_provider'];
                 $providerId = $payload['firebase']['identities'][$provider][0];
-
                 $account = Account::whereProvider([
                     'provider' => $provider,
                     'provider_id' => $providerId,
                     'username' => $provider . '-' . $payload['email']
                 ])->first();
-
                 if ($account) {
                     $user = $account->user;
                 } else {
@@ -109,7 +106,6 @@ class AuthController extends Controller
             $posts_total = $user->posts()->count();
             $followers_total = $user->followers()->count();
             $following_total = $user->following()->count();
-
             return response()->json(reshelper()->withFormat([
                 'profile' => $user,
                 'posts' => [
@@ -136,6 +132,7 @@ class AuthController extends Controller
      */
     public function profile()
     {
+        $cookie = cookie('token', auth()->refresh(), auth()->factory()->getTTL());
         $user = auth()->user();
         $posts_total = $user->posts()->count();
         $followers_total = $user->followers()->count();
@@ -154,7 +151,7 @@ class AuthController extends Controller
                 'total' => $following_total,
                 'total_short' => numberhelper()->abbreviateNumber($following_total),
             ],
-        ]));
+        ]))->cookie($cookie);
     }
 
     /**

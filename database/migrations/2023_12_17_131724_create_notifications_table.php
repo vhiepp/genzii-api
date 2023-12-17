@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hashtags', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->string('user_id', 36);
+            $table->string('done_by_user_id', 36);
+            $table->string('type', 50);
+            $table->string('message');
+            $table->json('detail_data')->nullable();
+            $table->enum('status', ['not_seen', 'seen', 'deleted'])->default('not_seen');
             $table->string('created_at', 20);
             $table->string('updated_at', 20);
         });
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hashtags');
+        Schema::dropIfExists('notifications');
     }
 };

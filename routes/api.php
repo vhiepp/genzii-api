@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FriendController;
+use App\Http\Controllers\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,31 @@ Route::middleware('api')->group(function () {
     });
 
     Route::prefix('user')->group(function () {
-        Route::get('profile', [UserController::class, 'profile']);
+        Route::prefix('profile')->group(function () {
+            Route::get('', [UserController::class, 'profile']);
+            Route::get('{id}', [UserController::class, 'profileWithId']);
+        });
+    });
+
+    Route::prefix('friend')->group(function () {
+        Route::post('', [FriendController::class, 'requestFriend']);
+        Route::get('', [FriendController::class, 'friends']);
+        Route::delete('',  [FriendController::class, 'cancelledFriend']);
+
+        Route::prefix('request')->group(function () {
+            Route::get('', [FriendController::class, 'friendRequests']);
+            Route::delete('', [FriendController::class, 'cancelledFriendRequests']);
+            Route::post('', [FriendController::class, 'agreedFriendRequests']);
+        });
+    });
+
+    Route::prefix('follower')->group(function () {
+        Route::get('', [FollowController::class, 'followers']);
+    });
+
+    Route::prefix('following')->group(function () {
+        Route::get('', [FollowController::class, 'following']);
+        Route::post('', [FollowController::class, 'followUser']);
+        Route::delete('', [FollowController::class, 'cancelledFollowUser']);
     });
 });

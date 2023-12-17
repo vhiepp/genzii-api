@@ -20,7 +20,6 @@ class FollowSeeder extends Seeder
         $sum = 0;
         foreach ($users as $user) {
             $userFollows = User::where('id', '<>', $user->id)->inRandomOrder()->limit(rand(10, $users_total/3))->get();
-
             foreach ($userFollows as $userFollow) {
                 $user->following()->syncWithoutDetaching($userFollow->id);
                 if ($sum != 0) echo "\033[F\033[K";

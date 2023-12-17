@@ -12,7 +12,7 @@ class UserPost extends Model
 
     protected $fillable = [
         'user_author_id',
-        'posts_id'
+        'post_id'
     ];
 
     protected $casts = [

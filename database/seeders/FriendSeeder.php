@@ -21,7 +21,7 @@ class FriendSeeder extends Seeder
         foreach ($users as $user) {
             $userFriends = User::where('id', '<>', $user->id)->inRandomOrder()->limit(rand(1, 30))->get();
             foreach ($userFriends as $userFriend) {
-                $user->friendRequests()->attach($userFriend->id);
+                $userService->sendFriendRequest($user, $userFriend);
                 if ($sum != 0) echo "\033[F\033[K";
                 echo "Tạo lời mời kết bạn: " . (++$sum) . "\n";
             }

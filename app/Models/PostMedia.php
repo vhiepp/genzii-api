@@ -11,7 +11,7 @@ class PostMedia extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'posts_id',
+        'post_id',
         'media_id'
     ];
 

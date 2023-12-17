@@ -10,7 +10,7 @@ class PostFeeling extends Model
     use HasFactory;
 
     protected $fillable = [
-        'posts_id',
+        'post_id',
         'feeling_id',
         'user_id'
     ];
