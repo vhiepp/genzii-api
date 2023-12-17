@@ -41,38 +41,27 @@ class AuthController extends Controller
                     $posts_total = $user->posts()->count();
                     $followers_total = $user->followers()->count();
                     $following_total = $user->following()->count();
-                    return response()->json([
-                        'status' => 'success',
-                        'is_valid' => true,
-                        'error' => false,
-                        'message' => '',
-                        'data' => [
-                            'profile' => $user,
-                            'posts' => [
-                                'total' => $posts_total,
-                                'total_short' => numberhelper()->abbreviateNumber($posts_total),
-                            ],
-                            'followers' => [
-                                'total' => $followers_total,
-                                'total_short' => numberhelper()->abbreviateNumber($followers_total),
-                            ],
-                            'following' => [
-                                'total' => $following_total,
-                                'total_short' => numberhelper()->abbreviateNumber($following_total),
-                            ],
-                        ]
-                    ])->cookie($cookie);
+                    return response()->json(reshelper()->withFormat([
+                        'profile' => $user,
+                        'posts' => [
+                            'total' => $posts_total,
+                            'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                        ],
+                        'followers' => [
+                            'total' => $followers_total,
+                            'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                        ],
+                        'following' => [
+                            'total' => $following_total,
+                            'total_short' => numberhelper()->abbreviateNumber($following_total),
+                        ],
+                    ]))->cookie($cookie);
                 }
             }
         try {
         } catch (Exception $exception) { }
-        return response()->json([
-            'status' => 'error',
-            'is_valid' => false,
-            'error' => true,
-            'message' => 'Error, could be due to wrong email or password',
-            'data' => null
-        ], 401);
+
+        return response()->json(reshelper()->withFormat(null, 'Error, could be due to wrong email or password', 'error', false, true));
     }
 
     public function signInWithFirebase(Request $request)
@@ -114,65 +103,14 @@ class AuthController extends Controller
             }
             $token = auth()->tokenById($user->id);
             if (!$token) {
-                return response()->json([
-                    'status' => 'error',
-                    'is_valid' => false,
-                    'error' => true,
-                    'message' => 'Unauthorized',
-                    'data' => null
-                ], 401);
+                return response()->json(reshelper()->withFormat(null, 'Unauthorized', 'error', false, true));
             }
             $cookie = cookie('token', $token, auth()->factory()->getTTL());
             $posts_total = $user->posts()->count();
             $followers_total = $user->followers()->count();
             $following_total = $user->following()->count();
-            return response()->json([
-                'status' => 'success',
-                'is_valid' => true,
-                'error' => false,
-                'message' => 'Successfully sign in',
-                'data' => [
-                    'profile' => $user,
-                    'posts' => [
-                        'total' => $posts_total,
-                        'total_short' => numberhelper()->abbreviateNumber($posts_total),
-                    ],
-                    'followers' => [
-                        'total' => $followers_total,
-                        'total_short' => numberhelper()->abbreviateNumber($followers_total),
-                    ],
-                    'following' => [
-                        'total' => $following_total,
-                        'total_short' => numberhelper()->abbreviateNumber($following_total),
-                    ],
-                ]
-            ])->cookie($cookie);
-        } catch (\Exception $exception) {}
-        return response()->json([
-            'status' => 'error',
-            'is_valid' => false,
-            'error' => true,
-            'message' => 'error',
-            'data' => null
-        ]);
-    }
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function profile()
-    {
-        $user = auth()->user();
-        $posts_total = $user->posts()->count();
-        $followers_total = $user->followers()->count();
-        $following_total = $user->following()->count();
-        return response()->json([
-            'status' => 'success',
-            'is_valid' => true,
-            'error' => false,
-            'message' => '',
-            'data' => [
+
+            return response()->json(reshelper()->withFormat([
                 'profile' => $user,
                 'posts' => [
                     'total' => $posts_total,
@@ -186,8 +124,37 @@ class AuthController extends Controller
                     'total' => $following_total,
                     'total_short' => numberhelper()->abbreviateNumber($following_total),
                 ],
-            ]
-        ]);
+            ], 'Successfully sign in'))->cookie($cookie);
+        } catch (\Exception $exception) {}
+
+        return response()->json(reshelper()->withFormat(null, 'It could be due to expired firebase_access_token or input parameter error', 'error', false, true));
+    }
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile()
+    {
+        $user = auth()->user();
+        $posts_total = $user->posts()->count();
+        $followers_total = $user->followers()->count();
+        $following_total = $user->following()->count();
+        return response()->json(reshelper()->withFormat([
+            'profile' => $user,
+            'posts' => [
+                'total' => $posts_total,
+                'total_short' => numberhelper()->abbreviateNumber($posts_total),
+            ],
+            'followers' => [
+                'total' => $followers_total,
+                'total_short' => numberhelper()->abbreviateNumber($followers_total),
+            ],
+            'following' => [
+                'total' => $following_total,
+                'total_short' => numberhelper()->abbreviateNumber($following_total),
+            ],
+        ]));
     }
 
     /**
@@ -199,13 +166,7 @@ class AuthController extends Controller
     {
         auth()->logout();
         $cookie = cookie()->forget('token');
-        return response()->json([
-            'is_valid' => true,
-            'message' => 'Successfully sign out',
-            'error' => false,
-            'status' => 'success',
-            'data' => null
-        ], 200)->cookie($cookie);
+        return response()->json(reshelper()->withFormat(null, 'Successfully sign out', 'success', true, false))->cookie($cookie);
     }
 
 }

@@ -11,17 +11,13 @@ class Authenticate
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      */
-//    protected function redirectTo(Request $request): ?string
-//    {
-//        return $request->expectsJson() ? null : route('login');
-//    }
-
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check()) {
             $response = $next($request);
             return $response;
         }
-        return response()->json(['error' => 'Unauthorized'], 401);
+//        Unauthorized
+        return response()->json(reshelper()->withFormat(null, 'Unauthorized', 'error', false, true));
     }
 }

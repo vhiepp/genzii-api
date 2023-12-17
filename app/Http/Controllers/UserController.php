@@ -24,35 +24,25 @@ class UserController extends Controller
                 $posts_total = $user->posts()->count();
                 $followers_total = $user->followers()->count();
                 $following_total = $user->following()->count();
-                return response()->json([
-                    'is_valid' => true,
-                    'status' => 'success',
-                    'message' => '',
-                    'error' => false,
-                    'data' => [
-                        'profile' => $user,
-                        'posts' => [
-                            'total' => $posts_total,
-                            'total_short' => numberhelper()->abbreviateNumber($posts_total),
-                        ],
-                        'followers' => [
-                            'total' => $followers_total,
-                            'total_short' => numberhelper()->abbreviateNumber($followers_total),
-                        ],
-                        'following' => [
-                            'total' => $following_total,
-                            'total_short' => numberhelper()->abbreviateNumber($following_total),
-                        ],
-                    ]
-                ]);
+
+                return response()->json(reshelper()->withFormat([
+                    'profile' => $user,
+                    'posts' => [
+                        'total' => $posts_total,
+                        'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                    ],
+                    'followers' => [
+                        'total' => $followers_total,
+                        'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                    ],
+                    'following' => [
+                        'total' => $following_total,
+                        'total_short' => numberhelper()->abbreviateNumber($following_total),
+                    ],
+                ]));
             }
         } catch (\Exception $exception) {}
-        return response()->json([
-            'is_valid' => false,
-            'status' => 'not_found',
-            'message' => 'Error or not found user',
-            'error' => true,
-            'data' => null,
-        ]);
+
+        return response()->json(reshelper()->withFormat(null, 'Error or not found user', 'not_found', false, true));
     }
 }
