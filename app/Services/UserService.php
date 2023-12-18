@@ -10,7 +10,8 @@ use App\Services\Notifications\NotificationType;
 
 class UserService
 {
-    public function sendFriendRequest(string|User $userRequest = null, string|User $userIsRequested = null) {
+    public function sendFriendRequest(string|User $userRequest = null, string|User $userIsRequested = null)
+    {
         if (gettype($userRequest) == 'string') {
             $userRequest = User::find($userRequest);
         }
@@ -57,7 +58,8 @@ class UserService
         return false;
     }
 
-    public function cancelledFriendRequests(string|User $userRequest = null, string|User $userIsRequested = null) {
+    public function cancelledFriendRequests(string|User $userRequest = null, string|User $userIsRequested = null)
+    {
         if (gettype($userRequest) == 'string') {
             $userRequest = User::find($userRequest);
         }
@@ -87,7 +89,24 @@ class UserService
         return false;
     }
 
-    public function changeAvatar(string|User $user, string|Avatar $avatar) {
+    public function isFollowingUser(string|User $user = null, string|User $userIsFollowed = null): bool
+    {
+        if (gettype($user) == 'string') {
+            $user = User::find($user);
+        }
+        if (gettype($userIsFollowed) == 'string') {
+            $userIsFollowed = User::find($userIsFollowed);
+        }
+        if ($user && $userIsFollowed && ($user->id != $userIsFollowed->id)) {
+            if ($user->following()->where('id', $userIsFollowed->id)->first()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function changeAvatar(string|User $user, string|Avatar $avatar)
+    {
         try {
             if (gettype($user) == 'string') {
                 $user = User::find($user);

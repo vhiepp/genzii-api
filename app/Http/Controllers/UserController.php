@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
+    protected UserService $userService;
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => []]);
+        $this->userService = new UserService();
     }
 
     public function profile(Request $request) {
@@ -44,6 +46,7 @@ class UserController extends Controller
                         'total' => $following_total,
                         'total_short' => numberhelper()->abbreviateNumber($following_total),
                     ],
+                    'is_following' => $this->userService->isFollowingUser(auth()->user(), $user)
                 ]));
             }
         } catch (\Exception $exception) {}
@@ -73,6 +76,7 @@ class UserController extends Controller
                         'total' => $following_total,
                         'total_short' => numberhelper()->abbreviateNumber($following_total),
                     ],
+                    'is_following' => $this->userService->isFollowingUser(auth()->user(), $user)
                 ]));
             }
         } catch (\Exception $exception) {}
