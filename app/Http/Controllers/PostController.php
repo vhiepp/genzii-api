@@ -18,7 +18,7 @@ class PostController extends Controller
     public function createNewPost(Request $request)
     {
         try {
-            $mediaUrl = filehelper()->saveMedia($request->media, auth()->user()->uid);
+            $mediaUrl = filehelper()->saveMedia($request->files('media'), auth()->user()->uid);
             $post = $this->postService->createNew(
                 auth()->user(),
                 $request->caption,
