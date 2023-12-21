@@ -54,7 +54,9 @@ class PostController extends Controller
     {
         try {
             $post = Post::find($id);
-            return response()->json(reshelper()->withFormat($post));
+            if ($post) {
+                return response()->json(reshelper()->withFormat($post));
+            }
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
     }
