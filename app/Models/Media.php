@@ -15,10 +15,27 @@ class Media extends Model
         'type'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp'
     ];
 
     protected $dateFormat = 'U';
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::retrieved(function ($media) {
+            if (!str(str_replace(' ', '', $media->file_url))->isUrl()) {
+                if ($media->file_url[0] != '/') $media->file_url = '/' . $media->file_url;
+                $media->file_url = env('APP_URL', 'http://localhost:8000') . $media->file_url;
+            }
+        });
+    }
 }

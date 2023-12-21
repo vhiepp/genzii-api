@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('post_hearts', function (Blueprint $table) {
             $table->string('post_id', 36);
             $table->string('user_id', 36);
+            $table->boolean('active')->default(true);
         });
     }
 

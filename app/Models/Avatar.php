@@ -18,7 +18,9 @@ class Avatar extends Model
     ];
 
     protected $hidden = [
-        'user_id'
+        'user_id',
+        'created_at',
+        'updated_at'
     ];
 
     protected $casts = [
@@ -38,7 +40,8 @@ class Avatar extends Model
         parent::boot();
 
         static::retrieved(function ($avatar) {
-            if (!str()->isUrl($avatar->url)) {
+            if (!str(str_replace(' ', '', $avatar->url))->isUrl()) {
+                if ($avatar->url[0] != '/') $avatar->url = '/' . $avatar->url;
                 $avatar->url = env('APP_URL') . $avatar->url;
             }
         });

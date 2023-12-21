@@ -56,7 +56,11 @@ class UserController extends Controller
 
     public function profileWithId(Request $request, string $id) {
         try {
-            $user = User::find($id);
+            if (str($id)->isUuid()) {
+                $user = User::find($id);
+            } else {
+                $user = User::where('uid', $id)->first();
+            }
             if ($user) {
                 $posts_total = $user->posts()->count();
                 $followers_total = $user->followers()->count();

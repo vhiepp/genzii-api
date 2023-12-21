@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('file_url');
-            $table->string('extension', 20);
+            $table->longText('file_url');
+            $table->enum('type', ['image', 'video']);
             $table->string('created_at', 20);
             $table->string('updated_at', 20);
         });

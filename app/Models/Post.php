@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Post extends Model
 {
@@ -13,7 +15,13 @@ class Post extends Model
     protected $fillable = [
         'description',
         'status',
-        'limit'
+        'limit',
+        'created_at',
+        'updated_at'
+    ];
+
+    protected $hidden = [
+        'description'
     ];
 
     protected $casts = [
@@ -25,6 +33,48 @@ class Post extends Model
 
     protected $attributes = [
         'limit' => 'all',
-        'status' => 'waiting'
+        'status' => 'showing'
     ];
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::retrieved(function ($post) {
+            $post->media;
+            $post->caption = $post->description;
+            $post->author = $post->authors()->first();
+            $heart_total = $post->hearts()->count();
+            $comment_total = $post->comments()->count();
+            $post->heart = [
+                'total' => $heart_total,
+                'total_short' => numberhelper()->abbreviateNumber($heart_total)
+            ];
+            $post->comment = [
+                'total' => $comment_total,
+                'total_short' => numberhelper()->abbreviateNumber($comment_total)
+            ];
+        });
+    }
+
+    public function media(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, PostMedia::class, 'post_id', 'media_id');
+    }
+
+    public function hearts(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'post_hearts', 'post_id', 'user_id')->withPivotValue(['active' => true]);
+    }
+
+    public function comments(): BelongsToMany
+    {
+        return $this->belongsToMany(Comment::class, PostComment::class, 'post_id', 'comment_id')->withPivotValue(['status' => 'showing']);
+    }
+
+    public function authors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_posts', 'post_id', 'user_author_id');
+    }
+
 }

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('post_comments', function (Blueprint $table) {
             $table->string('post_id', 36);
             $table->string('comment_id', 36);
+            $table->enum('status', ['showing', 'await', 'deleted', 'hidden'])->default('await');
         });
     }
 

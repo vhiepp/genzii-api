@@ -105,6 +105,22 @@ class UserService
         return false;
     }
 
+    public function isFriend(string|User $userOne = null, string|User $userTwo = null): bool
+    {
+        if (gettype($userOne) == 'string') {
+            $userOne = User::find($userOne);
+        }
+        if (gettype($userTwo) == 'string') {
+            $userTwo = User::find($userTwo);
+        }
+        if ($userOne && $userTwo && ($userOne->id != $userTwo->id)) {
+            if ($userOne->friends()->where('id', $userTwo->id)->first()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function changeAvatar(string|User $user, string|Avatar $avatar)
     {
         try {
@@ -122,8 +138,7 @@ class UserService
             }
             $user->avatars()->find($avatar->id)->update(['current' => true]);
             return true;
-        } catch (\Exception $ex) {
-            return false;
-        }
+        } catch (\Exception $ex) {}
+        return false;
     }
 }

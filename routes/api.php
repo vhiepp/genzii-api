@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +29,14 @@ Route::middleware('api')->group(function () {
     Route::prefix('user')->group(function () {
         Route::prefix('profile')->group(function () {
             Route::get('', [UserController::class, 'profile']);
-            Route::get('{id}', [UserController::class, 'profileWithId']);
+            Route::prefix('{id}')->group(function () {
+                Route::get('', [UserController::class, 'profileWithId']);
+            });
+        });
+        Route::prefix('{id}')->group(function () {
+            Route::get('', [UserController::class, 'profileWithId']);
+            Route::get('profile', [UserController::class, 'profileWithId']);
+            Route::get('posts', [PostController::class, 'getPostForUserId']);
         });
     });
 
@@ -53,4 +61,11 @@ Route::middleware('api')->group(function () {
         Route::post('', [FollowController::class, 'followUser']);
         Route::delete('', [FollowController::class, 'cancelledFollowUser']);
     });
+
+    Route::prefix('posts')->group(function () {
+        Route::post('', [PostController::class, 'createNewPost']);
+        Route::get('', [PostController::class, 'getPosts']);
+//        Route::get('{id}', [PostController::class, 'getPostForUserId']);
+    });
+
 });

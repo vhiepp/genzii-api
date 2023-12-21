@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
@@ -25,4 +26,18 @@ class Comment extends Model
     ];
 
     protected $dateFormat = 'U';
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::retrieved(function ($user) {
+            $user->author;
+        });
+    }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_author_id');
+    }
 }
