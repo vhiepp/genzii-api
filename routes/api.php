@@ -27,17 +27,20 @@ Route::middleware('api')->group(function () {
     });
 
     Route::prefix('user')->group(function () {
+
         Route::prefix('profile')->group(function () {
-            Route::get('', [UserController::class, 'profile']);
+            Route::post('', [UserController::class, 'profile']);
             Route::prefix('{id}')->group(function () {
                 Route::get('', [UserController::class, 'profileWithId']);
             });
         });
+
         Route::prefix('{id}')->group(function () {
             Route::get('', [UserController::class, 'profileWithId']);
             Route::get('profile', [UserController::class, 'profileWithId']);
             Route::get('posts', [PostController::class, 'getPostForUserId']);
         });
+
     });
 
     Route::prefix('friend')->group(function () {
