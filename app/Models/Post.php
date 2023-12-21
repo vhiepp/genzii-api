@@ -64,12 +64,12 @@ class Post extends Model
 
     public function hearts(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'post_hearts', 'post_id', 'user_id')->withPivotValue(['active' => true]);
+        return $this->belongsToMany(User::class, 'post_hearts', 'post_id', 'user_id', 'id', 'id')->withPivotValue(['active' => true]);
     }
 
     public function comments(): BelongsToMany
     {
-        return $this->belongsToMany(Comment::class, PostComment::class, 'post_id', 'comment_id')->withPivotValue(['status' => 'showing']);
+        return $this->belongsToMany(Comment::class, PostComment::class, 'post_id', 'comment_id', 'id', 'id')->withPivotValue(['status' => 'showing']);
     }
 
     public function authors(): BelongsToMany

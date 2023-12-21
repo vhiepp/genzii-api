@@ -114,14 +114,7 @@ class PostService
         if (gettype($user) == 'string') {
             $user = User::find($user);
         }
-        $userService = new UserService();
-        $limit = ['all', 'friends'];
-        if (auth()->check()) {
-            if ($user->id == auth()->user()->id) {
-                $limit = ['all', 'friends', 'only_me'];
-            }
-        }
-        $posts = Post::whereNotIn('id', $notInPostIds)->whereIn('limit', $limit)->inRandomOrder()->paginate($paginate);
+        $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'asc')->limit(40)->get();
         return $posts;
     }
 }
