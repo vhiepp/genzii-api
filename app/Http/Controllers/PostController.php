@@ -18,7 +18,7 @@ class PostController extends Controller
     public function createNewPost(Request $request)
     {
         try {
-            $mediaUrl = filehelper()->saveMedia($request->files('media'), auth()->user()->uid);
+            $mediaUrl = filehelper()->saveMedia($request->file('media'), auth()->user()->uid);
             $post = $this->postService->createNew(
                 auth()->user(),
                 $request->caption,
@@ -26,7 +26,9 @@ class PostController extends Controller
                 $request->limit
             );
             $post = Post::find($post->id);
-            return response()->json(reshelper()->withFormat($post, 'Create new post successfully'));
+            if ($post) {
+                return response()->json(reshelper()->withFormat($post, 'Create new post successfully'));
+            }
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
     }
@@ -39,8 +41,10 @@ class PostController extends Controller
             } else {
                 $user = User::where('uid', $id)->first();
             }
-            $posts = $this->postService->getPostForUser($user);
-            return response()->json(reshelper()->withFormat($posts));
+            if ($user) {
+                $posts = $this->postService->getPostForUser($user);
+                return response()->json(reshelper()->withFormat($posts));
+            }
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
     }
