@@ -68,7 +68,10 @@ Route::middleware('api')->group(function () {
     Route::prefix('posts')->group(function () {
         Route::post('', [PostController::class, 'createNewPost']);
         Route::get('', [PostController::class, 'getPosts']);
-//        Route::get('{id}', [PostController::class, 'getPostForUserId']);
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('', [PostController::class, 'getPostWithId']);
+        });
     });
 
 });

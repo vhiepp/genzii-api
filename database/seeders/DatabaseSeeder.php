@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
 //            UserSeeder::class,
 //            FriendSeeder::class,
 //            FollowSeeder::class,
-//            PostSeeder::class,
+            PostSeeder::class,
             PostCommentSeeder::class,
             PostHeartSeeder::class,
         ]);
