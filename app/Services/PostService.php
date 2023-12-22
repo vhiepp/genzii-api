@@ -114,7 +114,7 @@ class PostService
         if (gettype($user) == 'string') {
             $user = User::find($user);
         }
-        $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'asc')->limit(40)->get();
+        $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'asc')->limit(30)->get();
         return $posts;
     }
 }

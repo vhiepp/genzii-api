@@ -20,9 +20,9 @@ class PostHeartSeeder extends Seeder
         $sum = 0;
         $postService = new PostService();
         $userService = new UserService();
-        $posts = Post::whereIn('limit', ['all', 'friends'])->get();
+        $posts = Post::whereIn('limit', ['all', 'friends'])->orderBy('updated_at', 'asc')->limit(500)->get();
         foreach ($posts as $post) {
-            $users = User::where('id', '<>', $post->authors()->first()->id)->inRandomOrder()->limit(rand(10, config('seeder.user_total')/2))->get();
+            $users = User::where('id', '<>', $post->authors()->first()->id)->inRandomOrder()->limit(rand(10, 40))->get();
             foreach ($users as $user) {
                 try {
                     if ($post->limit == 'all' || ($userService->isFriend($post->authors()->first(), $user->id))) {

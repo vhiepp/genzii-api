@@ -20,9 +20,9 @@ class PostCommentSeeder extends Seeder
         $sum = 0;
         $postService = new PostService();
         $userService = new UserService();
-        $posts = Post::whereIn('limit', ['all', 'friends'])->get();
+        $posts = Post::whereIn('limit', ['all', 'friends'])->orderBy('updated_at', 'asc')->limit(500)->get();
         foreach ($posts as $post) {
-            $users = User::where('id', '<>', $post->authors()->first()->id)->inRandomOrder()->limit(rand(10, config('seeder.user_total')/4))->get();
+            $users = User::where('id', '<>', $post->author->id)->inRandomOrder()->limit(rand(10, config('seeder.user_total')/4))->get();
             foreach ($users as $user) {
                 try {
                     $comment = VNFaker::comment();
