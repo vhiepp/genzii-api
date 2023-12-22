@@ -141,4 +141,13 @@ class UserService
         } catch (\Exception $ex) {}
         return false;
     }
+
+    public function searchUserForKey(string $searchKey = '')
+    {
+        $users = User::where('uid', 'like', '%' . $searchKey . '%')
+            ->orWhere('full_name', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'asc')
+            ->paginate(8);
+        return $users;
+    }
 }

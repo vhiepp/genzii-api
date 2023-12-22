@@ -75,4 +75,18 @@ class UserController extends Controller
         }
         return null;
     }
+
+    public function searchUser(Request $request) {
+        try {
+            $searchKey = $request->search_key ? $request->search_key : null;
+            if ($searchKey) {
+                $users = $this->userService->searchUserForKey($searchKey);
+                foreach ($users as $user) {
+                    $user->is_following = $this->userService->isFollowingUser(auth()->user(), $user);
+                }
+                return response()->json(reshelper()->withFormat($users));
+            }
+        } catch (\Exception $exception) {}
+        return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
+    }
 }

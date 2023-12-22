@@ -43,6 +43,9 @@ Route::middleware('api')->group(function () {
             Route::get('posts', [PostController::class, 'getPostForUserId']);
         });
 
+        Route::prefix('search')->group(function () {
+            Route::post('', [UserController::class, 'searchUser']);
+        });
     });
 
     Route::prefix('friend')->group(function () {
