@@ -88,4 +88,7 @@ Route::middleware('api')->group(function () {
         });
     });
 
+    Route::prefix('search')->group(function () {
+        Route::post('user', [UserController::class, 'searchUser']);
+    });
 });
