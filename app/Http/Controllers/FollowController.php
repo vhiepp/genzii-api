@@ -3,19 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class FollowController extends Controller
 {
+    public UserService $userService;
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => []]);
+        $this->userService = new UserService();
     }
     public function followers(Request $request)
     {
         try {
             $pagination = $request->paginate ? $request->paginate : 8;
             $friendRequest = auth()->user()->followers()->orderBy('updated_at', 'asc')->paginate($pagination);
+            foreach ($friendRequest as $fR) {
+                $fR->is_following = $this->userService->isFollowingUser(auth()->user(), $fR);
+            }
             return response()->json(reshelper()->withFormat($friendRequest));
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error', 'error', false, true));
