@@ -10,6 +10,21 @@ use App\Services\Notifications\NotificationType;
 
 class PostService
 {
+    public function isUserHavePermissionToViewPost(string|User $user, string|Post $post): bool
+    {
+        if (gettype($user) == 'string') {
+            $user = User::find($user);
+        }
+        if (gettype($post) == 'string') {
+            $post = Post::find($post);
+        }
+        $userService = new UserService();
+        return  ($post && $user &&
+                ($post->limit == 'all' ||
+                ($post->limit == 'friends' && $userService->isFriend($user, $post->author)) ||
+                ($post->limit == 'only_me' && $post->author->id == $user->id))
+        );
+    }
     public function createNew(string|User $user, string $description, array|string $mediaUrl, string $limit = 'all')
     {
         if (gettype($user) == 'string') {

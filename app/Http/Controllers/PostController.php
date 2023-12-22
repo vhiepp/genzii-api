@@ -79,9 +79,7 @@ class PostController extends Controller
                             'id' => $post->id,
                             'exp' => $nowTime + 300
                         ]);
-                        if ($post->limit == 'all' ||
-                            ($post->limit == 'friends' && $this->userService->isFriend($post->author, $user)) ||
-                            ($post->limit == 'only_me' && $post->author->id == $user->id))
+                        if ($this->postService->isUserHavePermissionToViewPost(auth()->user(), $post))
                         {
                             $count++;
                             array_push($postRes, $post);
@@ -103,12 +101,7 @@ class PostController extends Controller
     {
         try {
             $post = Post::find($id);
-            if ($post &&
-                ($post->limit == 'all' ||
-                    ($post->limit == 'friends' && $this->userService->isFriend(auth()->user(), $post->author)) ||
-                    ($post->limit == 'only_me' && $post->author->id == auth()->user()->id)
-                )
-            ) {
+            if ($this->postService->isUserHavePermissionToViewPost(auth()->user(), $post)) {
                 return response()->json(reshelper()->withFormat($post));
             }
         } catch (\Exception $exception) {}

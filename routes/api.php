@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HeartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +73,15 @@ Route::middleware('api')->group(function () {
 
         Route::prefix('{id}')->group(function () {
             Route::get('', [PostController::class, 'getPostWithId']);
+
+            Route::prefix('comments')->group(function () {
+                Route::get('', [CommentController::class, 'getCommentForPostId']);
+                Route::post('', [CommentController::class, 'createCommentForPostId']);
+            });
+
+            Route::prefix('hearts')->group(function () {
+                Route::post('', [HeartController::class, 'heartForPostId']);
+            });
         });
     });
 
