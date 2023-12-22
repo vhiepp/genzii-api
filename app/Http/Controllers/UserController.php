@@ -28,26 +28,7 @@ class UserController extends Controller
                 $user = User::where('email', $request->email)->first();
             }
             if ($user) {
-                $posts_total = $user->posts()->count();
-                $followers_total = $user->followers()->count();
-                $following_total = $user->following()->count();
-
-                return response()->json(reshelper()->withFormat([
-                    'profile' => $user,
-                    'posts' => [
-                        'total' => $posts_total,
-                        'total_short' => numberhelper()->abbreviateNumber($posts_total),
-                    ],
-                    'followers' => [
-                        'total' => $followers_total,
-                        'total_short' => numberhelper()->abbreviateNumber($followers_total),
-                    ],
-                    'following' => [
-                        'total' => $following_total,
-                        'total_short' => numberhelper()->abbreviateNumber($following_total),
-                    ],
-                    'is_following' => $this->userService->isFollowingUser(auth()->user(), $user)
-                ]));
+                return response()->json(reshelper()->withFormat($this->resProfile($user)));
             }
         } catch (\Exception $exception) {}
 
@@ -62,29 +43,36 @@ class UserController extends Controller
                 $user = User::where('uid', $id)->first();
             }
             if ($user) {
-                $posts_total = $user->posts()->count();
-                $followers_total = $user->followers()->count();
-                $following_total = $user->following()->count();
-
-                return response()->json(reshelper()->withFormat([
-                    'profile' => $user,
-                    'posts' => [
-                        'total' => $posts_total,
-                        'total_short' => numberhelper()->abbreviateNumber($posts_total),
-                    ],
-                    'followers' => [
-                        'total' => $followers_total,
-                        'total_short' => numberhelper()->abbreviateNumber($followers_total),
-                    ],
-                    'following' => [
-                        'total' => $following_total,
-                        'total_short' => numberhelper()->abbreviateNumber($following_total),
-                    ],
-                    'is_following' => $this->userService->isFollowingUser(auth()->user(), $user)
-                ]));
+                return response()->json(reshelper()->withFormat($this->resProfile($user)));
             }
         } catch (\Exception $exception) {}
 
         return response()->json(reshelper()->withFormat(null, 'Error or not found user', 'not_found', false, true));
+    }
+
+    public function resProfile(User $user) {
+        if ($user) {
+            $posts_total = $user->posts()->count();
+            $followers_total = $user->followers()->count();
+            $following_total = $user->following()->count();
+            return [
+                'profile' => $user,
+                'posts' => [
+                    'total' => $posts_total,
+                    'total_short' => numberhelper()->abbreviateNumber($posts_total),
+                ],
+                'followers' => [
+                    'total' => $followers_total,
+                    'total_short' => numberhelper()->abbreviateNumber($followers_total),
+                ],
+                'following' => [
+                    'total' => $following_total,
+                    'total_short' => numberhelper()->abbreviateNumber($following_total),
+                ],
+                'is_following' => $this->userService->isFollowingUser(auth()->user(), $user),
+                'is_friend' => $this->userService->isFriend(auth()->user(), $user)
+            ];
+        }
+        return null;
     }
 }
