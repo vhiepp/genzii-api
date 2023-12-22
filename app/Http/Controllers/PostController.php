@@ -89,6 +89,7 @@ class PostController extends Controller
                     }
                     if ($count >= 8) break;
                 }
+                shuffle($postRes);
                 return response()->json(reshelper()->withFormat([
                     'posts' => $postRes,
                     'except_posts' => json_encode($newExceptPosts)
