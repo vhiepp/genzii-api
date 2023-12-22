@@ -42,6 +42,12 @@ class Post extends Model
 
         static::retrieved(function ($post) {
             $post->media;
+            if (!$post->media) {
+                $media = new Media();
+                $media->file_url = "https://img.vhiep.com/?w=600&h=800&text=Image&red=240&green=240&blue=240";
+                $media->type = "image";
+                $post->media = $media;
+            }
             $post->caption = $post->description;
             $post->author = $post->authors()->first();
             $heart_total = $post->hearts()->count();

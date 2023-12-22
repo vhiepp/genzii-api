@@ -121,7 +121,7 @@ class PostService
                 $limit = ['all', 'friends'];
             }
         }
-        return $user->posts()->whereIn('limit', $limit)->paginate(8);
+        return $user->posts()->whereIn('limit', $limit)->orderBy('created_at', 'asc')->paginate(8);
     }
 
     public function getPosts(string|User $user, int $paginate = 8, array $notInPostIds = [])

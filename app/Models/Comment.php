@@ -13,7 +13,8 @@ class Comment extends Model
 
     protected $fillable = [
         'content',
-        'user_author_id'
+        'user_author_id',
+        'status'
     ];
 
     protected $hidden = [
