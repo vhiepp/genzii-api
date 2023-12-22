@@ -60,7 +60,7 @@ class PostController extends Controller
                 $notInPostIds = [];
                 $newExceptPosts = [];
                 $nowTime = time();
-                $exceptPosts = $request->cookie('except_posts');
+                $exceptPosts = $request->except_posts ? $request->except_posts : [];
                 if ($exceptPosts && str($exceptPosts)->isJson()) {
                     $exceptPosts = json_decode($exceptPosts);
                     foreach ($exceptPosts as $exceptPost) {
@@ -89,8 +89,10 @@ class PostController extends Controller
                     }
                     if ($count >= 8) break;
                 }
-                $cookie = cookie('except_posts', json_encode($newExceptPosts), 15);
-                return response()->json(reshelper()->withFormat($postRes))->cookie($cookie);
+                return response()->json(reshelper()->withFormat([
+                    'posts' => $postRes,
+                    'except_posts' => json_encode($newExceptPosts)
+                ]));
             }
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
