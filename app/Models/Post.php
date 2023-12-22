@@ -56,7 +56,7 @@ class Post extends Model
             ];
             $heart = null;
             if (auth()->check()) {
-                $heart = $post->hearts->where('id', auth()->user()->id)->first();
+                $heart = $post->hearts()->where('id', auth()->user()->id)->first();
             }
             $post->is_heart = ($heart && $heart->pivot->active);
         });
