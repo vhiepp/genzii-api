@@ -10,7 +10,7 @@ use App\Services\Notifications\NotificationType;
 
 class UserService
 {
-    public function sendFriendRequest(string|User $userRequest = null, string|User $userIsRequested = null)
+    public function sendFriendRequest(string|User $userRequest = null, string|User $userIsRequested = null): bool
     {
         if (gettype($userRequest) == 'string') {
             $userRequest = User::find($userRequest);
@@ -33,7 +33,7 @@ class UserService
         return false;
     }
 
-    public function addFriend(string|User $userOne = null, string|User $userTwo = null)
+    public function addFriend(string|User $userOne = null, string|User $userTwo = null): bool
     {
         if (gettype($userOne) == 'string') {
             $userOne = User::find($userOne);
@@ -58,7 +58,7 @@ class UserService
         return false;
     }
 
-    public function cancelledFriendRequests(string|User $userRequest = null, string|User $userIsRequested = null)
+    public function cancelledFriendRequests(string|User $userRequest = null, string|User $userIsRequested = null): bool
     {
         if (gettype($userRequest) == 'string') {
             $userRequest = User::find($userRequest);
@@ -73,7 +73,7 @@ class UserService
         return false;
     }
 
-    public function cancelledFriend(string|User $userOne = null, string|User $userTwo = null)
+    public function cancelledFriend(string|User $userOne = null, string|User $userTwo = null): bool
     {
         if (gettype($userOne) == 'string') {
             $userOne = User::find($userOne);
@@ -121,7 +121,7 @@ class UserService
         return false;
     }
 
-    public function changeAvatar(string|User $user, string|Avatar $avatar)
+    public function changeAvatar(string|User $user, string|Avatar $avatar): bool
     {
         try {
             if (gettype($user) == 'string') {
@@ -146,7 +146,7 @@ class UserService
     {
         $users = User::where('uid', 'like', '%' . $searchKey . '%')
             ->orWhere('full_name', 'like', '%' . $searchKey . '%')
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->paginate(8);
         return $users;
     }

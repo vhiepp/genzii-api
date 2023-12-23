@@ -73,38 +73,44 @@ class PostService
         return $comment;
     }
 
-    public function createHeart(string|Post $post, string|User $user)
+    public function createHeart(string|Post $post, string|User $user): bool
     {
-        if (gettype($user) == 'string') {
-            $user = User::find($user);
-        }
-        if (gettype($post) == 'string') {
-            $post = Post::find($post);
-        }
-        $post->hearts()->syncWithoutDetaching([$user->id => ['active' => true]]);
-        $notificationService = new NotificationService();
-        $notificationService->createNew(
-            NotificationType::LIKE_POST,
-            $post->authors()->first(),
-            $user,
-            NotificationMessage::LIKE_POST,
-            [
-                'post_id' => $post->id
-            ]
-        );
-        return true;
+        try {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
+            }
+            if (gettype($post) == 'string') {
+                $post = Post::find($post);
+            }
+            $post->hearts()->syncWithoutDetaching([$user->id => ['active' => true]]);
+            $notificationService = new NotificationService();
+            $notificationService->createNew(
+                NotificationType::LIKE_POST,
+                $post->authors()->first(),
+                $user,
+                NotificationMessage::LIKE_POST,
+                [
+                    'post_id' => $post->id
+                ]
+            );
+            return true;
+        } catch (\Exception $exception) {}
+        return false;
     }
 
-    public function cancelledHeart(string|Post $post, string|User $user)
+    public function cancelledHeart(string|Post $post, string|User $user): bool
     {
-        if (gettype($user) == 'string') {
-            $user = User::find($user);
-        }
-        if (gettype($post) == 'string') {
-            $post = Post::find($post);
-        }
-        $post->hearts()->updateExistingPivot($user->id, ['active' => false]);
-        return true;
+        try {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
+            }
+            if (gettype($post) == 'string') {
+                $post = Post::find($post);
+            }
+            $post->hearts()->updateExistingPivot($user->id, ['active' => false]);
+            return true;
+        } catch (\Exception $exception) {}
+        return false;
     }
 
     public function getPostForUser(string|User $user, int $paginate = 8)
@@ -121,7 +127,7 @@ class PostService
                 $limit = ['all', 'friends'];
             }
         }
-        return $user->posts()->whereIn('limit', $limit)->orderBy('created_at', 'asc')->paginate(8);
+        return $user->posts()->whereIn('limit', $limit)->orderBy('created_at', 'desc')->paginate(8);
     }
 
     public function getPosts(string|User $user, int $paginate = 8, array $notInPostIds = [])
@@ -129,7 +135,7 @@ class PostService
         if (gettype($user) == 'string') {
             $user = User::find($user);
         }
-        $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'asc')->limit(30)->get();
+        $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'desc')->limit(30)->get();
         return $posts;
     }
 }

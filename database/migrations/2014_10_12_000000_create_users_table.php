@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('gender', ["male", "female", "other"])->default("other");
             $table->string('address')->nullable();
             $table->enum('role', ["user", "admin"])->default("user");
+            $table->string('maxim')->nullable();
             $table->string('created_at', 20);
             $table->string('updated_at', 20);
         });

@@ -12,7 +12,7 @@ class NotificationService
         string|User $userCreatedNotification = null,
         string $message = '',
         $detailData = null
-    )
+    ): bool
     {
         if (gettype($userIsNotified) == 'string') {
             $userIsNotified = User::find($userIsNotified);

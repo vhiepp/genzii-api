@@ -41,5 +41,4 @@ class Account extends Model
     public function scopeWhereProvider(Builder $query, $provider) {
         $query->where('username', $provider['username'])->where('provider', $provider['provider'])->where('provider_id', $provider['provider_id']);
     }
-
 }

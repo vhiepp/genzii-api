@@ -26,7 +26,7 @@ class CommentController extends Controller
         try {
             $post = Post::find($id);
             if ($this->postService->isUserHavePermissionToViewPost(auth()->user(), $post)) {
-                $comments = $post->comments()->orderBy('updated_at', 'asc')->paginate(8);
+                $comments = $post->comments()->orderBy('updated_at', 'desc')->paginate(8);
                 return response()->json(reshelper()->withFormat($comments));
             }
         } catch (\Exception $exception) {}

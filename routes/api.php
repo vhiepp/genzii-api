@@ -51,7 +51,7 @@ Route::middleware('api')->group(function () {
     Route::prefix('friend')->group(function () {
         Route::get('', [FriendController::class, 'friends']);
         Route::post('', [FriendController::class, 'requestFriend']);
-        Route::delete('',  [FriendController::class, 'cancelledFriend']);
+        Route::delete('', [FriendController::class, 'cancelledFriend']);
 
         Route::prefix('request')->group(function () {
             Route::get('', [FriendController::class, 'friendRequests']);
