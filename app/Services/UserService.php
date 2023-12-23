@@ -144,6 +144,8 @@ class UserService
 
     public function searchUserForKey(string $searchKey = '')
     {
+        $searchKey = preg_replace('/\s+/', ' ', $searchKey);
+        $searchKey = trim($searchKey);
         $users = User::where('uid', 'like', '%' . $searchKey . '%')
             ->orWhere('full_name', 'like', '%' . $searchKey . '%')
             ->orderBy('created_at', 'desc')
