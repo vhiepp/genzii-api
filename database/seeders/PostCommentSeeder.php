@@ -22,7 +22,7 @@ class PostCommentSeeder extends Seeder
         $userService = new UserService();
         $posts = Post::whereIn('limit', ['all', 'friends'])->orderBy('updated_at', 'asc')->limit(500)->get();
         foreach ($posts as $post) {
-            $users = User::where('id', '<>', $post->author->id)->inRandomOrder()->limit(rand(10, config('seeder.user_total')/4))->get();
+            $users = User::where('id', '<>', $post->author->id)->inRandomOrder()->limit(rand(3, 30))->get();
             foreach ($users as $user) {
                 try {
                     $comment = VNFaker::comment();

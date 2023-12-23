@@ -88,6 +88,10 @@ Route::middleware('api')->group(function () {
         });
     });
 
+    Route::prefix('comments')->group(function () {
+        Route::delete('', [CommentController::class, 'deleteComment']);
+    });
+
     Route::prefix('search')->group(function () {
         Route::post('user', [UserController::class, 'searchUser']);
     });

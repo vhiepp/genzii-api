@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->longText('content');
             $table->string('user_author_id', 36);
+            $table->enum('status', ['showing', 'await', 'deleted', 'hidden'])->default('showing');
             $table->string('created_at', 20);
             $table->string('updated_at', 20);
         });

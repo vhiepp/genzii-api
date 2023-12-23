@@ -22,7 +22,7 @@ class PostSeeder extends Seeder
         $timeS = strtotime('01/01/2000');
         $timeE = time();
         foreach ($users as $user) {
-            for ($i = 0; $i < rand(5, 20); $i++) {
+            for ($i = 0; $i < rand(5, 25); $i++) {
                 try {
                     $description = VNFaker::statusText();
                     $post = $postService->createNew(

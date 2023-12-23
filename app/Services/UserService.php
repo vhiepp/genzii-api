@@ -89,35 +89,39 @@ class UserService
         return false;
     }
 
-    public function isFollowingUser(string|User $user = null, string|User $userIsFollowed = null): bool
+    public function isFollowingUser(string|User|null $user = null, string|User|null $userIsFollowed = null): bool
     {
-        if (gettype($user) == 'string') {
-            $user = User::find($user);
-        }
-        if (gettype($userIsFollowed) == 'string') {
-            $userIsFollowed = User::find($userIsFollowed);
-        }
-        if ($user && $userIsFollowed && ($user->id != $userIsFollowed->id)) {
-            if ($user->following()->where('id', $userIsFollowed->id)->first()) {
-                return true;
+        try {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
             }
-        }
+            if (gettype($userIsFollowed) == 'string') {
+                $userIsFollowed = User::find($userIsFollowed);
+            }
+            if ($user && $userIsFollowed && ($user->id != $userIsFollowed->id)) {
+                if ($user->following()->where('id', $userIsFollowed->id)->first()) {
+                    return true;
+                }
+            }
+        } catch (\Exception $exception) {}
         return false;
     }
 
-    public function isFriend(string|User $userOne = null, string|User $userTwo = null): bool
+    public function isFriend(string|User|null $userOne = null, string|User|null $userTwo = null): bool
     {
-        if (gettype($userOne) == 'string') {
-            $userOne = User::find($userOne);
-        }
-        if (gettype($userTwo) == 'string') {
-            $userTwo = User::find($userTwo);
-        }
-        if ($userOne && $userTwo && ($userOne->id != $userTwo->id)) {
-            if ($userOne->friends()->where('id', $userTwo->id)->first()) {
-                return true;
+        try {
+            if (gettype($userOne) == 'string') {
+                $userOne = User::find($userOne);
             }
-        }
+            if (gettype($userTwo) == 'string') {
+                $userTwo = User::find($userTwo);
+            }
+            if ($userOne && $userTwo && ($userOne->id != $userTwo->id)) {
+                if ($userOne->friends()->where('id', $userTwo->id)->first()) {
+                    return true;
+                }
+            }
+        } catch (\Exception $exception) {}
         return false;
     }
 

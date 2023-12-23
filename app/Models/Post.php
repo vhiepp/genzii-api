@@ -80,7 +80,7 @@ class Post extends Model
 
     public function comments(): BelongsToMany
     {
-        return $this->belongsToMany(Comment::class, PostComment::class, 'post_id', 'comment_id', 'id', 'id')->withPivotValue(['status' => 'showing']);
+        return $this->belongsToMany(Comment::class, PostComment::class, 'post_id', 'comment_id', 'id', 'id')->where(['status' => 'showing']);
     }
 
     public function authors(): BelongsToMany

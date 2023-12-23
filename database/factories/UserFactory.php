@@ -31,7 +31,8 @@ class UserFactory extends Factory
             'date_of_birth' => $dateOfBirth,
             'gender' => VNFaker::gender(),
             'address' => VNFaker::address(rand(1, 2)),
-            'role' => 'user'
+            'role' => 'user',
+            'maxim' => ''
         ];
     }
 

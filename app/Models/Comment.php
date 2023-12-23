@@ -26,6 +26,10 @@ class Comment extends Model
         'updated_at' => 'timestamp'
     ];
 
+    protected $attributes = [
+        'status' => 'showing'
+    ];
+
     protected $dateFormat = 'U';
 
     public static function boot(): void
