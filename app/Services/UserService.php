@@ -18,7 +18,7 @@ class UserService
         if (gettype($userIsRequested) == 'string') {
             $userIsRequested = User::find($userIsRequested);
         }
-        if ($userRequest && $userIsRequested && ($userRequest->id != $userIsRequested->id)) {
+        if ($userRequest && $userIsRequested && ($userRequest->id != $userIsRequested->id) && !$this->isFriend($userRequest, $userIsRequested)) {
             $userIsRequested->sendFriendRequests()->updateExistingPivot($userRequest->id, ['status' => 'cancelled']);
             $userRequest->sendFriendRequests()->syncWithoutDetaching([$userIsRequested->id => ['status' => 'await']]);
             $notificationService = new NotificationService();
@@ -67,7 +67,22 @@ class UserService
             $userIsRequested = User::find($userIsRequested);
         }
         if ($userRequest && $userIsRequested && ($userRequest->id != $userIsRequested->id)) {
-            $userIsRequested->friendRequests()->updateExistingPivot($userRequest->id, ['status' => 'cancelled']);
+            $userIsRequested->friendRequests()->updateExistingPivot($userRequest->id, ['status' => 'disagree']);
+            return true;
+        }
+        return false;
+    }
+
+    public function cancelledRequestFriend(string|User $userRequest = null, string|User $userIsRequested = null): bool
+    {
+        if (gettype($userRequest) == 'string') {
+            $userRequest = User::find($userRequest);
+        }
+        if (gettype($userIsRequested) == 'string') {
+            $userIsRequested = User::find($userIsRequested);
+        }
+        if ($userRequest && $userIsRequested && ($userRequest->id != $userIsRequested->id)) {
+            $userRequest->sendFriendRequests()->updateExistingPivot($userIsRequested->id, ['status' => 'cancelled']);
             return true;
         }
         return false;

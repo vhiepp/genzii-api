@@ -53,7 +53,11 @@ Route::middleware('api')->group(function () {
 
     Route::prefix('friend')->group(function () {
         Route::get('', [FriendController::class, 'friends']);
+
         Route::post('', [FriendController::class, 'requestFriend']);
+        Route::post('send-request-friend', [FriendController::class, 'requestFriend']);
+        Route::delete('send-request-friend', [FriendController::class, 'cancelledSendRequestFriend']);
+
         Route::delete('', [FriendController::class, 'cancelledFriend']);
 
         Route::prefix('request')->group(function () {
@@ -76,6 +80,7 @@ Route::middleware('api')->group(function () {
     Route::prefix('posts')->group(function () {
         Route::post('for-you', [PostController::class, 'getPosts']);
         Route::post('', [PostController::class, 'createNewPost']);
+        Route::delete('', [PostController::class, 'deletePost']);
 
         Route::prefix('{id}')->group(function () {
             Route::get('', [PostController::class, 'getPostWithId']);
@@ -89,11 +94,18 @@ Route::middleware('api')->group(function () {
                 Route::post('', [HeartController::class, 'heartForPostId']);
             });
         });
+
     });
 
     Route::prefix('stories')->group(function () {
         Route::post('', [StoryController::class, 'createNewStory']);
         Route::get('users', [StoryController::class, 'getUserStoryListForYou']);
+        Route::get('', [StoryController::class, 'getStoryListForMe']);
+        Route::delete('', [StoryController::class, 'deleteStory']);
+
+        Route::prefix('{id}')->group(function () {
+            Route::get('', [StoryController::class, 'getStoryWithId']);
+        });
     });
 
     Route::prefix('comments')->group(function () {

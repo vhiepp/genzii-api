@@ -96,4 +96,29 @@ class StoryService
         }
         return $users;
     }
+
+    public function getStoryDetailWithId(string|null $id)
+    {
+        if ($id) {
+            $timeOfExistenceForStory = env('TIME_OF_EXISTENCE_FOR_STORY', 24 * 60 * 60);
+            $story = Story::where('id', $id)->where('status', 'showing')->where('created_at', '>=', time() - $timeOfExistenceForStory)->first();
+            if ($story) {
+                return $story;
+            }
+        }
+        return null;
+    }
+
+    public function deleteStoryWithId(string|null $id): bool
+    {
+        if ($id) {
+            $timeOfExistenceForStory = env('TIME_OF_EXISTENCE_FOR_STORY', 24 * 60 * 60);
+            $story = Story::where('id', $id)->where('status', 'showing')->where('created_at', '>=', time() - $timeOfExistenceForStory);
+            if ($story->first() && $story->first()->author->id == auth()->user()->id) {
+                $story->update(['status' => 'deleted']);
+                return true;
+            }
+        }
+        return false;
+    }
 }

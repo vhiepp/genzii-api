@@ -62,4 +62,34 @@ class StoryController extends Controller
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
     }
+
+    public function getStoryWithId(Request $request, string $id)
+    {
+        try {
+            $story = $this->storyService->getStoryDetailWithId($id);
+            if ($story && $this->storyService->isUserHavePermissionToViewStory(auth()->user(), $story)) {
+                return response()->json(reshelper()->withFormat($story));
+            }
+        } catch (\Exception $exception) {}
+        return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
+    }
+
+    public function getStoryListForMe(Request $request)
+    {
+        try {
+            $stories = $this->storyService->getStoryForUser(auth()->user());
+            return response()->json(reshelper()->withFormat($stories));
+        } catch (\Exception $exception) {}
+        return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
+    }
+
+    public function deleteStory(Request $request)
+    {
+        try {
+            if ($request->story_id && $this->storyService->deleteStoryWithId($request->story_id)) {
+                return response()->json(reshelper()->withFormat(null, 'Deleted Story Success'));
+            }
+        } catch (\Exception $exception) {}
+        return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
+    }
 }

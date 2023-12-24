@@ -110,9 +110,18 @@ class PostController extends Controller
     public function getPostWithId(Request $request, string $id)
     {
         try {
-            $post = Post::find($id);
-            if ($this->postService->isUserHavePermissionToViewPost(auth()->user(), $post)) {
+            $post = $this->postService->getPostDetailWithId($id);
+            if ($post && $this->postService->isUserHavePermissionToViewPost(auth()->user(), $post)) {
                 return response()->json(reshelper()->withFormat($post));
+            }
+        } catch (\Exception $exception) {}
+        return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
+    }
+
+    public function deletePost(Request $request) {
+        try {
+            if ($request->post_id && $this->postService->deletePostWithId($request->post_id)) {
+                return response()->json(reshelper()->withFormat(null, 'Deleted Post Success'));
             }
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));

@@ -168,13 +168,13 @@ class User extends Authenticatable implements JWTSubject
 
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'user_posts', 'user_author_id', 'post_id', 'id', 'id');
+        return $this->belongsToMany(Post::class, 'user_posts', 'user_author_id', 'post_id', 'id', 'id')->where('status', 'showing');
     }
 
     public function stories(): BelongsToMany
     {
-        $timeIn24Hour = 24 * 60 * 60;
-        return $this->belongsToMany(Story::class, 'user_stories', 'user_author_id', 'story_id', 'id', 'id')->where('created_at', '>=', time() - $timeIn24Hour);
+        $timeOfExistenceForStory = env('TIME_OF_EXISTENCE_FOR_STORY', 24 * 60 * 60);
+        return $this->belongsToMany(Story::class, 'user_stories', 'user_author_id', 'story_id', 'id', 'id')->where('created_at', '>=', time() - $timeOfExistenceForStory)->where('status', 'showing');
     }
 
     /**
@@ -200,7 +200,11 @@ class User extends Authenticatable implements JWTSubject
                 'method' => static function(string $string, string $separator): string {
                     $slug = strtolower(preg_replace('/[^a-z]+/i', $separator, $string));
                     if (strlen($slug) <= 8) {
-                        $slug = '_' . $slug;
+                        if (rand(0, 1) > 0) {
+                            $slug = '_' . $slug;
+                        } else {
+                            $slug = $slug . '_';
+                        }
                     }
                     return $slug;
                 },

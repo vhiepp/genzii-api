@@ -144,4 +144,27 @@ class PostService
         $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'desc')->limit(30)->get();
         return $posts;
     }
+
+    public function getPostDetailWithId(string|null $id)
+    {
+        if ($id) {
+            $post = Post::where('id', $id)->where('status', 'showing')->first();
+            if ($post) {
+                return $post;
+            }
+        }
+        return null;
+    }
+
+    public function deletePostWithId(string|null $id): bool
+    {
+        if ($id) {
+            $post = Post::where('id', $id)->where('status', 'showing')->first();
+            if ($post && $post->author->id == auth()->user()->id) {
+                Post::where('id', $id)->where('status', 'showing')->update(['status' => 'deleted']);
+                return true;
+            }
+        }
+        return false;
+    }
 }

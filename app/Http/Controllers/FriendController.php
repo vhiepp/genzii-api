@@ -48,6 +48,16 @@ class FriendController extends Controller
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
     }
 
+    public function cancelledSendRequestFriend(Request $request)
+    {
+        try {
+            if ($this->userService->cancelledRequestFriend(auth()->user(), $request->user_is_requested_id)) {
+                return response()->json(reshelper()->withFormat(null, 'Cancelled request friend successfully'));
+            }
+        } catch (\Exception $exception) {}
+        return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
+    }
+
     public function agreedFriendRequests(Request $request)
     {
         try {
