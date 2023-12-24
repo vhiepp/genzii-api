@@ -72,7 +72,7 @@ class UserController extends Controller
                 'is_following' => $this->userService->isFollowingUser(auth()->user(), $user),
                 'is_friend' => $this->userService->isFriend(auth()->user(), $user),
                 'is_send_invitation' => !!auth()->user()->sendFriendRequests->where('id', $user->id)->first(),
-                'is_request_friend' => !!$user->sendFriendRequests->where('id', auth()->user()->id)->first()
+                'is_request_friend' => !!$user->sendFriendRequests()->where('id', auth()->user()->id)->first()
             ];
         }
         return null;
