@@ -85,6 +85,10 @@ class UserController extends Controller
                 $users = $this->userService->searchUserForKey($searchKey);
                 foreach ($users as $user) {
                     $user->is_following = $this->userService->isFollowingUser(auth()->user(), $user);
+                    $user->followers = [
+                        'total' => $user->followers_count,
+                        'total_short' => numberhelper()->abbreviateNumber($user->followers_count),
+                    ];
                 }
                 return response()->json(reshelper()->withFormat($users));
             }
