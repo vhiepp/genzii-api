@@ -156,8 +156,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(User::class, 'user_follows', 'user_follower_id', 'user_is_followed_id', 'id', 'id')->withPivotValue(['status' => 'followed']);
     }
 
-
-
     public function avatars(): HasMany
     {
         return $this->hasMany(Avatar::class, 'user_id', 'id');
@@ -171,6 +169,11 @@ class User extends Authenticatable implements JWTSubject
     public function posts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'user_posts', 'user_author_id', 'post_id', 'id', 'id');
+    }
+
+    public function stories(): BelongsToMany
+    {
+        return $this->belongsToMany(Story::class, 'user_stories', 'user_author_id', 'story_id', 'id', 'id');
     }
 
     /**
