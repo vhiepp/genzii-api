@@ -20,7 +20,7 @@ class PostCommentSeeder extends Seeder
         $sum = 0;
         $postService = new PostService();
         $userService = new UserService();
-        $posts = Post::whereIn('limit', ['all', 'friends'])->orderBy('updated_at', 'asc')->limit(500)->get();
+        $posts = Post::whereIn('limit', ['all', 'friends'])->orderBy('updated_at', 'desc')->limit(500)->get();
         foreach ($posts as $post) {
             $users = User::where('id', '<>', $post->author->id)->inRandomOrder()->limit(rand(3, 30))->get();
             foreach ($users as $user) {
