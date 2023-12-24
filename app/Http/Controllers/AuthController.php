@@ -98,6 +98,7 @@ class AuthController extends Controller
                     ]);
                 }
             }
+            $user = User::find($user->id);
             $token = auth()->tokenById($user->id);
             if (!$token) {
                 return response()->json(reshelper()->withFormat(null, 'Unauthorized', 'error', false, true));
