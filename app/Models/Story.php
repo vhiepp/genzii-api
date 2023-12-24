@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -13,13 +14,18 @@ class Story extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'content',
-        'media_id'
+        'media_id',
+        'status',
+        'limit'
     ];
 
     protected $casts = [
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp'
+    ];
+
+    protected $attributes = [
+        'description' => ''
     ];
 
     protected $dateFormat = 'U';

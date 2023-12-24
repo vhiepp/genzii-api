@@ -28,7 +28,7 @@ class PostService
         } catch (\Exception $exception) {}
         return false;
     }
-    public function createNew(string|User $user, string $description, array|string $mediaUrl, string $limit = 'all')
+    public function createNew(string|User $user, string $description, array|string $mediaUrl, string|null $limit = 'all')
     {
         if (gettype($user) == 'string') {
             $user = User::find($user);
@@ -36,6 +36,9 @@ class PostService
         if (gettype($mediaUrl) == 'string') {
             $arr = []; array_push($arr, $mediaUrl);
             $mediaUrl = $arr;
+        }
+        if ($limit == null) {
+            $limit = 'only_me';
         }
         $post = $user->posts()->create([
             'description' => $description,

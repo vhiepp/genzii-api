@@ -8,6 +8,7 @@ class NotificationMessage
     const COMMENT_POST = 'vừa bình luận về bài viết';
     const LIKE_STORY = 'thích tin của bạn';
     const COMMENT_STORY = 'vừa bình luận tin của bạn';
+    const CREATE_NEW_STORY = 'vừa đăng khoảnh khắc';
     const FOLLOW = 'vừa theo dõi bạn';
     const SYSTEM = 'thông báo hệ thống';
     const NEW_FRIEND_REQUEST = 'có lời mời kết bạn mới';

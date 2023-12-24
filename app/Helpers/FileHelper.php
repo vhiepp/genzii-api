@@ -4,11 +4,11 @@ namespace App\Helpers;
 
 class FileHelper
 {
-    public function saveMedia($file, string $uid = '__')
+    public function saveMedia($file, string $uid = '__', string $folderType = 'images')
     {
-        $folder = 'public/images/' . $uid . '/media';
+        $folder = 'public/' . $uid . '/media/' . $folderType;
         $filename = $file->hashName();
-        $url = '/storage/images/' . $uid . '/media/' . $filename;
+        $url = '/storage/' . $uid . '/media/' . $folderType . '/' . $filename;
         $file->store($folder);
         return $url;
     }

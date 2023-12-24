@@ -173,7 +173,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function stories(): BelongsToMany
     {
-        return $this->belongsToMany(Story::class, 'user_stories', 'user_author_id', 'story_id', 'id', 'id');
+        $timeIn24Hour = 24 * 60 * 60;
+        return $this->belongsToMany(Story::class, 'user_stories', 'user_author_id', 'story_id', 'id', 'id')->where('created_at', '>=', time() - $timeIn24Hour);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\StoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HeartController;
 
@@ -41,11 +42,13 @@ Route::middleware('api')->group(function () {
             Route::get('', [UserController::class, 'profileWithId']);
             Route::get('profile', [UserController::class, 'profileWithId']);
             Route::get('posts', [PostController::class, 'getPostForUserId']);
+            Route::get('stories', [StoryController::class, 'getStoryForUserId']);
         });
 
         Route::prefix('search')->group(function () {
             Route::post('', [UserController::class, 'searchUser']);
         });
+
     });
 
     Route::prefix('friend')->group(function () {
@@ -86,6 +89,11 @@ Route::middleware('api')->group(function () {
                 Route::post('', [HeartController::class, 'heartForPostId']);
             });
         });
+    });
+
+    Route::prefix('stories')->group(function () {
+        Route::post('', [StoryController::class, 'createNewStory']);
+        Route::get('users', [StoryController::class, 'getUserStoryListForYou']);
     });
 
     Route::prefix('comments')->group(function () {
