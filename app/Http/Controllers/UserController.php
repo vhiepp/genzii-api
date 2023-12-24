@@ -70,7 +70,8 @@ class UserController extends Controller
                     'total_short' => numberhelper()->abbreviateNumber($following_total),
                 ],
                 'is_following' => $this->userService->isFollowingUser(auth()->user(), $user),
-                'is_friend' => $this->userService->isFriend(auth()->user(), $user)
+                'is_friend' => $this->userService->isFriend(auth()->user(), $user),
+                'is_send_invitation' => !!auth()->user()->sendFriendRequests->where('id', $user->id)->first()
             ];
         }
         return null;
