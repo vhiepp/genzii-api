@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\PostService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -21,6 +22,12 @@ class PostController extends Controller
     public function createNewPost(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'media' => 'mimes:jpeg,png,jpg,gif,svg',
+            ]);
+            if ($validator->fails()) {
+                return response(reshelper()->withFormat(null, 'Error, media must be an image', 'error', false, true));
+            }
             $mediaUrl = filehelper()->saveMedia($request->file('media'), auth()->user()->uid);
             $post = $this->postService->createNew(
                 auth()->user(),
