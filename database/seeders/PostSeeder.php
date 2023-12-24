@@ -19,7 +19,7 @@ class PostSeeder extends Seeder
         $sum = 0;
         $postService = new PostService();
         $users = User::all();
-        $timeS = strtotime('01/01/2000');
+        $timeS = strtotime('01/01/2022');
         $timeE = time();
         foreach ($users as $user) {
             for ($i = 0; $i < rand(5, 25); $i++) {
