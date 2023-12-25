@@ -80,7 +80,7 @@ class StoryService
 
     public function getUserStoryList()
     {
-        $users = User::where('id', '<>', auth()->user()->id)->withCount('stories')->orderBy('stories_count', 'desc')->paginate(8);
+        $users = User::where('id', '<>', auth()->user()->id)->withCount('stories')->orderBy('stories_count', 'desc')->paginate(30);
         foreach ($users as $user) {
             $limit = ['all'];
             if (auth()->check()) {
