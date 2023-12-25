@@ -20,17 +20,28 @@ class UserController extends Controller
     public function profile(Request $request) {
         try {
             $user = null;
-            if ($request->id) {
-                $user = User::where('id', $request->id)->first();
-            }
-            elseif ($request->uid) {
-                $user = User::where('uid', $request->uid)->first();
-            }
-            elseif ($request->email) {
-                $user = User::where('email', $request->email)->first();
-            }
-            if ($user) {
-                return response()->json(reshelper()->withFormat($this->resProfile($user)));
+            if (gettype($request->uid) == 'array') {
+                $users = User::whereIn('uid', $request->uid)->get();
+                if ($request->group) {
+                    $users = $users->groupBy('uid')->toArray();
+                    foreach ($users as $key => $user) {
+                        $users[$key] = $user[0];
+                    }
+                }
+                return response()->json(reshelper()->withFormat($users));
+            } else {
+                if ($request->id) {
+                    $user = User::where('id', $request->id)->first();
+                }
+                elseif ($request->uid) {
+                    $user = User::where('uid', $request->uid)->first();
+                }
+                elseif ($request->email) {
+                    $user = User::where('email', $request->email)->first();
+                }
+                if ($user) {
+                    return response()->json(reshelper()->withFormat($this->resProfile($user)));
+                }
             }
         } catch (\Exception $exception) {}
 
