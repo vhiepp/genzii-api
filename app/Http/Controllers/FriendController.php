@@ -31,7 +31,7 @@ class FriendController extends Controller
     {
         try {
             $pagination = $request->paginate ? $request->paginate : 8;
-            $friendRequest = auth()->user()->friendRequests()->orderBy('updated_at', 'desc')->paginate($pagination);
+            $friendRequest = auth()->user()->friendRequests()->orderBy('updated_at', 'asc')->paginate($pagination);
             return response()->json(reshelper()->withFormat($friendRequest));
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error', 'error', false, true));
@@ -71,7 +71,7 @@ class FriendController extends Controller
     {
         try {
             $pagination = $request->paginate ? $request->paginate : 8;
-            $friendRequest = auth()->user()->friends()->orderBy('updated_at', 'desc')->paginate($pagination);
+            $friendRequest = auth()->user()->friends()->orderBy('updated_at', 'asc')->paginate($pagination);
             return response()->json(reshelper()->withFormat($friendRequest));
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error', 'error', false, true));

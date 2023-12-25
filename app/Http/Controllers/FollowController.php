@@ -17,7 +17,7 @@ class FollowController extends Controller
     {
         try {
             $pagination = $request->paginate ? $request->paginate : 8;
-            $friendRequest = auth()->user()->followers()->orderBy('updated_at', 'desc')->paginate($pagination);
+            $friendRequest = auth()->user()->followers()->orderBy('updated_at', 'asc')->paginate($pagination);
             foreach ($friendRequest as $fR) {
                 $fR->is_following = $this->userService->isFollowingUser(auth()->user(), $fR);
             }
@@ -50,7 +50,7 @@ class FollowController extends Controller
     {
         try {
             $pagination = $request->paginate ? $request->paginate : 8;
-            $friendRequest = auth()->user()->following()->orderBy('updated_at', 'desc')->paginate($pagination);
+            $friendRequest = auth()->user()->following()->orderBy('updated_at', 'asc')->paginate($pagination);
             return response()->json(reshelper()->withFormat($friendRequest));
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error', 'error', false, true));
