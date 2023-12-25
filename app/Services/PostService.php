@@ -22,7 +22,7 @@ class PostService
             $userService = new UserService();
             return  ($post && $user &&
                     ($post->limit == 'all' ||
-                    ($post->limit == 'friends' && $userService->isFriend($user, $post->author)) ||
+                    ($post->limit == 'friends' && ($userService->isFriend($user, $post->author) || $user->id == $post->author->id)) ||
                     ($post->limit == 'only_me' && $post->author->id == $user->id))
             );
         } catch (\Exception $exception) {}

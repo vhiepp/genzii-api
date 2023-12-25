@@ -23,7 +23,7 @@ class StoryService
             $userService = new UserService();
             return  ($story && $user &&
                 ($story->limit == 'all' ||
-                    ($story->limit == 'friends' && $userService->isFriend($user, $story->author)) ||
+                    ($story->limit == 'friends' && ($userService->isFriend($user, $story->author) || $user->id == $story->author->id)) ||
                     ($story->limit == 'only_me' && $story->author->id == $user->id))
             );
         } catch (\Exception $exception) {}
