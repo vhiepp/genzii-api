@@ -83,6 +83,7 @@ class StoryService
         $users = User::where('id', '<>', auth()->user()->id)
             ->withCount('stories')
             ->having('stories_count', '>', 0)
+            ->orderByDesc('stories_count')
             ->paginate(8);
         foreach ($users as $user) {
             $limit = ['all'];
