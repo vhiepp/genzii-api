@@ -11,7 +11,6 @@ class FollowController extends Controller
     public UserService $userService;
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => []]);
         $this->userService = new UserService();
     }
     public function followers(Request $request)

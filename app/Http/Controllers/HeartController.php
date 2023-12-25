@@ -12,7 +12,6 @@ class HeartController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => []]);
         $this->postService = new PostService();
     }
 

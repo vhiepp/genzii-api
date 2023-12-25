@@ -15,7 +15,6 @@ class PostController extends Controller
     protected UserService $userService;
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['getPostWithId']]);
         $this->postService = new PostService();
         $this->userService = new UserService();
     }

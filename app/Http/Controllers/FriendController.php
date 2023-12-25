@@ -12,7 +12,6 @@ class FriendController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => []]);
         $this->userService = new UserService();
     }
 

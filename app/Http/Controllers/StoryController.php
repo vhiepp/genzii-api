@@ -15,7 +15,6 @@ class StoryController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => []]);
         $this->storyService = new StoryService();
     }
 
