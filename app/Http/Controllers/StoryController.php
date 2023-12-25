@@ -55,11 +55,18 @@ class StoryController extends Controller
 
     public function getUserStoryListForYou(Request $request)
     {
-        try {
             $users = $this->storyService->getUserStoryList();
             $users = $users->toArray();
+            $users_temp = [];
+            foreach ($users['data'] as $user) {
+                if ($user['stories_count'] > 0) {
+                    $users_temp[] = $user;
+                }
+            }
+            $users['data'] = $users_temp;
             shuffle($users['data']);
             return response()->json(reshelper()->withFormat($users));
+        try {
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error, It may be due to incorrect parameters being passed', 'error', false, true));
     }
