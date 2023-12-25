@@ -29,9 +29,9 @@ class PostController extends Controller
                 return response(reshelper()->withFormat(null, 'Error, media must be an image', 'error', false, true));
             }
             $mediaUrl = filehelper()->saveMedia($request->file('media'), auth()->user()->uid);
-            if (env('SERVER_IMAGE_URL', false) && env('APP_ENV', '') == 'production') {
-                $mediaUrl = env('SERVER_IMAGE_URL') . "?w=600&h=800&image=" . env("APP_URL", '') . $mediaUrl;
-            }
+//            if (env('SERVER_IMAGE_URL', false) && env('APP_ENV', '') == 'production') {
+//                $mediaUrl = env('SERVER_IMAGE_URL') . "?w=600&h=800&image=" . env("APP_URL", '') . $mediaUrl;
+//            }
             $post = $this->postService->createNew(
                 auth()->user(),
                 $request->caption,

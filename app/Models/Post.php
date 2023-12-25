@@ -44,7 +44,7 @@ class Post extends Model
             $post->media;
             if (count($post->media) == 0) {
                 $media = new Media();
-                $media->file_url = "https://img.vhiep.com/?w=600&h=800&text=Image&red=240&green=240&blue=240";
+                $media->file_url = env('SERVER_IMAGE_URL') . "?w=600&h=800&text=Image&red=240&green=240&blue=240";
                 $media->type = "image";
                 $post->media[] = $media;
             }
