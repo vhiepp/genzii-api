@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\PostService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     protected UserService $userService;
+    protected PostService $postService;
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => []]);
         $this->userService = new UserService();
+        $this->postService = new PostService();
     }
 
     public function profile(Request $request) {
@@ -52,7 +55,7 @@ class UserController extends Controller
 
     public function resProfile(User $user) {
         if ($user) {
-            $posts_total = $user->posts()->count();
+            $posts_total = $this->postService->getPostForUser($user)->total();
             $followers_total = $user->followers()->count();
             $following_total = $user->following()->count();
             return [
