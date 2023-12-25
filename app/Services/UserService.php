@@ -165,7 +165,8 @@ class UserService
     {
         $searchKey = preg_replace('/\s+/', ' ', $searchKey);
         $searchKey = trim($searchKey);
-        $users = User::where('uid', 'like', '%' . $searchKey . '%')
+        $users = User::where('id', '<>', auth()->user()->id)
+            ->where('uid', 'like', '%' . $searchKey . '%')
             ->orWhere('full_name', 'like', '%' . $searchKey . '%')
             ->orWhere('email', 'like', '%' . $searchKey . '%')
             ->withCount('followers')
