@@ -169,7 +169,7 @@ class UserService
             ->orWhere('full_name', 'like', '%' . $searchKey . '%')
             ->orWhere('email', 'like', '%' . $searchKey . '%')
             ->withCount('followers')
-            ->orderBy('followers_count', 'asc')
+            ->orderBy('followers_count', 'desc')
             ->paginate(8);
         return $users;
     }
