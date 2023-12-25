@@ -50,8 +50,8 @@ class FollowController extends Controller
     {
         try {
             $pagination = $request->paginate ? $request->paginate : 8;
-            $friendRequest = auth()->user()->following()->orderBy('updated_at', 'asc')->paginate($pagination);
-            return response()->json(reshelper()->withFormat($friendRequest));
+            $following = auth()->user()->following()->orderBy('updated_at', 'asc')->paginate($pagination);
+            return response()->json(reshelper()->withFormat($following));
         } catch (\Exception $exception) {}
         return response(reshelper()->withFormat(null, 'Error', 'error', false, true));
     }
