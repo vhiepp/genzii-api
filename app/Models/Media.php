@@ -36,7 +36,7 @@ class Media extends Model
                 if ($media->file_url[0] != '/') $media->file_url = '/' . $media->file_url;
                 $media->file_url = env('APP_URL', 'http://localhost:8000') . $media->file_url;
                 if (env('SERVER_IMAGE_URL', false) && $media->type == 'image' && env('APP_ENV', '') == 'production') {
-                    $media->file_url = env('SERVER_IMAGE_URL') . "?w=600&h=800&image=" . env("APP_URL", '') . $media->file_url;
+                    $media->file_url = env('SERVER_IMAGE_URL') . "?w=600&h=800&image=" . $media->file_url;
                 }
             }
         });
