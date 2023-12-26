@@ -73,7 +73,8 @@ class PostService
             $user,
             NotificationMessage::COMMENT_POST,
             [
-                'post_id' => $post->id
+                'post_id' => $post->id,
+                'comment_id' => $comment->id
             ]
         );
         return $comment;

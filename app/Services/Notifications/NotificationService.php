@@ -4,7 +4,6 @@ namespace App\Services\Notifications;
 
 use App\Models\Notification;
 use App\Models\User;
-use http\Env\Request;
 
 class NotificationService
 {
