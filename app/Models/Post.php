@@ -44,10 +44,10 @@ class Post extends Model
         static::retrieved(function ($post) {
             $post->media;
             if (count($post->media) == 0) {
-                $post->media()->create([
-                    'file_url' => VNFaker::image(600, 800, $post->description),
-                    'type' => 'image'
-                ]);
+                $media = new Media();
+                $media->file_url = env('SERVER_IMAGE_URL') . "?w=600&h=800&text=Image&red=240&green=240&blue=240";
+                $media->type = "image";
+                $post->media[] = $media;
             }
             $post->caption = $post->description;
             $post->author = $post->authors()->first();
