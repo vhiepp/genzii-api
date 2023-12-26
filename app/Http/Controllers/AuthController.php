@@ -100,6 +100,7 @@ class AuthController extends Controller
                         "sign_in_provider" => $firebaseInfo['providerData'][0]['providerId']
                     ]
                 ];
+                return $payload;
             }
             if ((env('APP_ENV') == 'production' && $payload['exp'] >= time()) || env('APP_ENV') == 'local') {
                 $provider = $payload['firebase']['sign_in_provider'];
@@ -198,7 +199,6 @@ class AuthController extends Controller
      */
     public function signOut()
     {
-        auth()->logout();
         $cookie = cookie()->forget('token');
         return response()->json(reshelper()->withFormat(null, 'Successfully sign out', 'success', true, false))->cookie($cookie);
     }
