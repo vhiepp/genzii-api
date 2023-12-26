@@ -55,7 +55,20 @@ class NotificationService
                     'detail_data' => json_encode($detailData),
                     'status' => 'not_seen'
                 ]);
-            } else {
+            }
+            elseif ($notificationType == NotificationType::CREATE_NEW_STORY) {
+                $userIsNotified->notifications()->updateOrCreate([
+                    'type' => $notificationType,
+                    'done_by_user_id' => $userCreatedNotification->id
+                ], [
+                    'type' => $notificationType,
+                    'done_by_user_id' => $userCreatedNotification->id,
+                    'message' => $message,
+                    'detail_data' => json_encode($detailData),
+                    'status' => 'not_seen'
+                ]);
+            }
+            else {
                 $userIsNotified->notifications()->create([
                     'done_by_user_id' => $userCreatedNotification->id,
                     'type' => $notificationType,
