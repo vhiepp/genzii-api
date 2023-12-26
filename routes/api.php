@@ -22,13 +22,13 @@ use App\Http\Controllers\NotifiController;
 |
 */
 
-Route::middleware('api')->group(function () {
+//Route::middleware('api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('sign-in', [AuthController::class, 'signInWithEmailPassword']);
         Route::post('sign-in-with-firebase', [AuthController::class, 'signInWithFirebase']);
     });;
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware('authen')->group(function () {
         Route::prefix('auth')->group(function () {
             Route::get('sign-out', [AuthController::class, 'signOut']);
             Route::get('profile', [AuthController::class, 'profile']);
@@ -129,4 +129,4 @@ Route::middleware('api')->group(function () {
             Route::post('seen', [NotifiController::class, 'seenNotificationWithId']);
         });
     });
-});
+//});
