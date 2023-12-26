@@ -68,10 +68,39 @@ class AuthController extends Controller
     public function signInWithFirebase(Request $request)
     {
         try {
-            $token = explode('.', $request->firebase_access_token);
-            $encoded_payload = $token[1];
-            $decoded_payload = base64_decode($encoded_payload);
-            $payload = json_decode($decoded_payload, true);
+            $decoded_payload = false;
+            if (gettype($request->firebase_access_token) == 'string') {
+                $token = explode('.', $request->firebase_access_token);
+                $encoded_payload = $token[1];
+                $decoded_payload = base64_decode($encoded_payload, true);
+            }
+            if ($decoded_payload) {
+                $payload = json_decode($decoded_payload, true);
+            } else {
+                $firebaseInfo = $request->firebase_access_token;
+                $payload = [
+                    "name" => $firebaseInfo['displayName'],
+                    "picture" => $firebaseInfo['photoURL'],
+                    "iss" => "",
+                    "aud" => "sv5t-tvu-ca74b",
+                    "auth_time" => null,
+                    "user_id" => "",
+                    "sub" => "",
+                    "iat" => "",
+                    "exp" => $firebaseInfo['stsTokenManager']['expirationTime'],
+                    "email" => $firebaseInfo['email'],
+                    "email_verified" => true,
+                    "firebase" => [
+                        "identities" => [
+                            $firebaseInfo['providerData'][0]['providerId'] => [
+                                $firebaseInfo['providerData'][0]['uid']
+                            ],
+                            "email" => [$firebaseInfo['email']],
+                        ],
+                        "sign_in_provider" => $firebaseInfo['providerData'][0]['providerId']
+                    ]
+                ];
+            }
             if ((env('APP_ENV') == 'production' && $payload['exp'] >= time()) || env('APP_ENV') == 'local') {
                 $provider = $payload['firebase']['sign_in_provider'];
                 $providerId = $payload['firebase']['identities'][$provider][0];
