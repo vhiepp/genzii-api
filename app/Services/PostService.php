@@ -137,12 +137,12 @@ class PostService
         return $user->posts()->whereIn('limit', $limit)->orderBy('created_at', 'desc')->paginate(8);
     }
 
-    public function getPosts(string|User $user, int $paginate = 8, array $notInPostIds = [])
+    public function getPosts(string|User $user, array $notInPostIds = [])
     {
         if (gettype($user) == 'string') {
             $user = User::find($user);
         }
-        $posts = Post::whereNotIn('id', $notInPostIds)->orderBy('updated_at', 'desc')->limit(30)->get();
+        $posts = Post::whereNotIn('id', $notInPostIds)->selectRaw('*, CAST(updated_at AS UNSIGNED) AS updated_at_number')->orderByDesc('updated_at_number')->limit(30)->get();
         return $posts;
     }
 

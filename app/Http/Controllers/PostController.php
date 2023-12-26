@@ -79,7 +79,7 @@ class PostController extends Controller
                         }
                     }
                 }
-                $posts = $this->postService->getPosts($user, 8, $notInPostIds);
+                $posts = $this->postService->getPosts($user, $notInPostIds);
                 $postRes = [];
                 $count = 0;
                 foreach ($posts as $post) {
