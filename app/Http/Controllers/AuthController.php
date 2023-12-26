@@ -79,29 +79,29 @@ class AuthController extends Controller
             } else {
                 $firebaseInfo = $request->firebase_access_token;
                 $payload = [
-                    "name" => $firebaseInfo['displayName'],
-                    "picture" => $firebaseInfo['photoURL'],
+                    "name" => $firebaseInfo['providerData'][0]['displayName']??$firebaseInfo['displayName'],
+                    "picture" => $firebaseInfo['providerData'][0]['photoURL']??$firebaseInfo['photoURL']??null,
                     "iss" => "",
                     "aud" => "sv5t-tvu-ca74b",
                     "auth_time" => null,
                     "user_id" => "",
                     "sub" => "",
                     "iat" => "",
-                    "exp" => $firebaseInfo['stsTokenManager']['expirationTime'],
-                    "email" => $firebaseInfo['email'],
+                    "exp" => $firebaseInfo['stsTokenManager']['expirationTime']??time()+60,
+                    "email" => $firebaseInfo['providerData'][0]['email']??$firebaseInfo['email'],
                     "email_verified" => true,
                     "firebase" => [
                         "identities" => [
                             $firebaseInfo['providerData'][0]['providerId'] => [
                                 $firebaseInfo['providerData'][0]['uid']
                             ],
-                            "email" => [$firebaseInfo['email']],
+                            "email" => [$firebaseInfo['providerData'][0]['email']??$firebaseInfo['email']],
                         ],
                         "sign_in_provider" => $firebaseInfo['providerData'][0]['providerId']
                     ]
                 ];
-                return $payload;
             }
+
             if ((env('APP_ENV') == 'production' && $payload['exp'] >= time()) || env('APP_ENV') == 'local') {
                 $provider = $payload['firebase']['sign_in_provider'];
                 $providerId = $payload['firebase']['identities'][$provider][0];
@@ -136,7 +136,7 @@ class AuthController extends Controller
                 }
             }
             $user = User::find($user->id);
-            $token = auth()->tokenById($user->id);
+            $token = auth()->login($user);
             if (!$token) {
                 return response()->json(reshelper()->withFormat(null, 'Unauthorized', 'error', false, true));
             }
