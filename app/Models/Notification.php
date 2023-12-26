@@ -46,6 +46,11 @@ class Notification extends Model
 
     public function doneByUser(): BelongsTo
     {
-        return $this->BelongsTo(User::class, 'done_by_user_id', 'id');
+        return $this->belongsTo(User::class, 'done_by_user_id', 'id');
+    }
+
+    public function forUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

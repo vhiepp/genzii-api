@@ -15,10 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function (\Illuminate\Http\Request $request) {
-    dd(env('SERVER_IMAGE_URL', false));
-});
+    $notifiService = new \App\Services\Notifications\NotificationService();
 
-Route::get('/test', function (\Illuminate\Http\Request $request) {
-    dd($request->cookie('test'));
+    $user = User::find('9aea68a4-9a59-4691-9873-623cc80fd685');
+    dd($notifiService->getOldNotifiListForUser($user)->toArray());
 });
-

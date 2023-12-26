@@ -2,15 +2,34 @@
 
 namespace App\Services\Notifications;
 
+use App\Models\Notification;
 use App\Models\User;
+use http\Env\Request;
 
 class NotificationService
 {
+
+    protected int $limitNewNotification = 4;
+    protected int $expTimeNewNotification = 86400 * 4; // 4 day
+
+    public function isNotificationForUser(string|User|null $user, string|Notification|null $notification): bool
+    {
+        try {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
+            }
+            if (gettype($notification) == 'string') {
+                $notification = Notification::find($notification);
+            }
+            return $notification->forUser->id == $user->id;
+        } catch (\Exception $exception) {}
+        return false;
+    }
     public function createNew(
         string $notificationType = NotificationType::LIKE_POST,
         string|User $userIsNotified = null,
         string|User $userCreatedNotification = null,
-        string $message = '',
+        string $message = NotificationMessage::LIKE_POST,
         $detailData = null
     ): bool
     {
@@ -49,4 +68,72 @@ class NotificationService
         return false;
     }
 
+    public function getAllNotifiListForUser(string|User|null $user)
+    {
+        if ($user) {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
+            }
+            $notifications = $user->notifications()->orderByDesc('updated_at')->paginate(8);
+            return $notifications;
+        }
+        return null;
+    }
+
+    public function getOldNotifiListForUser(string|User|null $user)
+    {
+        if ($user) {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
+            }
+            $newNotifications = $this->getNewNotifiListForUser($user);
+            $eIds = [];
+            foreach ($newNotifications as $notifi) {
+                array_push($eIds, $notifi->id);
+            }
+            $notifications = $user->notifications()->orderByDesc('updated_at')->whereNotIn('id', $eIds)->paginate(8);
+            return $notifications;
+        }
+        return null;
+    }
+
+    public function getNewNotifiListForUser(string|User|null $user)
+    {
+        if ($user) {
+            if (gettype($user) == 'string') {
+                $user = User::find($user);
+            }
+            $notifications = $user->notifications()->where('updated_at', '>=', time() - $this->expTimeNewNotification)->orderByDesc('updated_at')->limit($this->limitNewNotification)->get();
+            return $notifications;
+        }
+        return null;
+    }
+
+    public function seenNotifiWithId(string|Notification|null $notification)
+    {
+        try {
+            if (gettype($notification) == 'string') {
+                $notification = Notification::find($notification);
+            }
+            if ($this->isNotificationForUser(auth()->user(), $notification)) {
+                if (Notification::where('id', $notification->id)->update(['status' => 'seen']))
+                    return true;
+            }
+        } catch (\Exception $exception) {}
+        return false;
+    }
+
+    public function deleteNotifiWithId(string|Notification|null $notification)
+    {
+        try {
+            if (gettype($notification) == 'string') {
+                $notification = Notification::find($notification);
+            }
+            if ($this->isNotificationForUser(auth()->user(), $notification)) {
+                if (Notification::where('id', $notification->id)->update(['status' => 'deleted']))
+                    return true;
+            }
+        } catch (\Exception $exception) {}
+        return false;
+    }
 }

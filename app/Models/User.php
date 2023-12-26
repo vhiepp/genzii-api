@@ -143,7 +143,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function notifications(): HasMany
     {
-        return $this->hasMany(Notification::class, 'user_id', 'id');
+        return $this->hasMany(Notification::class, 'user_id', 'id')->whereIn('status', ['not_seen', 'seen']);
     }
 
     public function following(): BelongsToMany
