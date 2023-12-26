@@ -2,6 +2,6 @@
 
 return [
 
-    'user_total' => 5000
+    'user_total' => 2500
 
 ];
