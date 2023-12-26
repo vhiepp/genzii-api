@@ -188,7 +188,9 @@ class User extends Authenticatable implements JWTSubject
     public function getSlugNameAttribute(): string
     {
         $slugName = str($this->firstname)->slug(' ');
-        $name = Str::wordCount($slugName) > 1 ? $slugName: str($this->full_name)->slug(' ');
+        $name = Str::wordCount($slugName) > 1 ? $slugName : str($this->full_name)->slug(' ');
+        $wordCountRand = rand(2, 3);
+        $name = Str::wordCount($name) > $wordCountRand ? implode(' ', array_slice(explode(' ', $name), 0, $wordCountRand)) : $name;
         return ' ' . str($name)->slug('');
     }
     public function sluggable(): array

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    protected UserService $userService;
     /**
      * Create a new AuthController instance.
      *
@@ -17,6 +19,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
+        $this->userService = new UserService();
     }
     /**
      * Get a JWT via given credentials.
@@ -88,6 +91,11 @@ class AuthController extends Controller
                             'lastname' => '',
                             'email' => $payload['email']
                         ]);
+                        try {
+                            if (str($payload['picture'])->isUrl()) {
+                                $this->userService->changeAvatar($user, $payload['picture']);
+                            }
+                        } catch (\Exception $exception) {}
                     }
                     $user->accounts()->create([
                         'username' => $provider . '-' . $payload['email'],
