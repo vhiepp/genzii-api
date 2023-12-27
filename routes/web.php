@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function (\Illuminate\Http\Request $request) {
     $count = 0;
     $posts = Post::withCount('media')->orderBy('media_count', 'asc')->limit(50)->get();
+    $ids = [];
     foreach ($posts as $post) {
-        if (count($post->media) == 0) {
-            $post->media()->create([
-                'file_url' => \Vhiepp\VNDataFaker\VNFaker::image(600, 800, $post->caption),
-                'type' => 'image'
-            ]);
+        if ($post->media->count() == 0) {
+            array_push($ids, $post->id);
             $count++;
         }
     }
+    Post::whereIn('id', $ids)->update(['status' => 'deleted']);
+
     return "ok " . $count;
 });

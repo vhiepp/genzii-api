@@ -142,7 +142,7 @@ class PostService
         if (gettype($user) == 'string') {
             $user = User::find($user);
         }
-        $posts = Post::whereNotIn('id', $notInPostIds)->selectRaw('*, CAST(updated_at AS UNSIGNED) AS updated_at_number')->orderByDesc('updated_at_number')->limit(30)->get();
+        $posts = Post::whereNotIn('id', $notInPostIds)->where('status', 'showing')->selectRaw('*, CAST(updated_at AS UNSIGNED) AS updated_at_number')->orderByDesc('updated_at_number')->limit(30)->get();
         return $posts;
     }
 
