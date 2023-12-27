@@ -11,6 +11,6 @@ class NotificationMessage
     const CREATE_NEW_STORY = 'vừa đăng khoảnh khắc';
     const FOLLOW = 'vừa theo dõi bạn';
     const SYSTEM = 'thông báo hệ thống';
-    const NEW_FRIEND_REQUEST = 'có lời mời kết bạn mới';
+    const NEW_FRIEND_REQUEST = 'vừa gửi lời mời kết bạn';
     const AGREED_FRIEND_REQUEST = 'vừa chấp nhận lời mời kết bạn';
 }

@@ -78,8 +78,9 @@ class AuthController extends Controller
                 $payload = json_decode($decoded_payload, true);
             } else {
                 $firebaseInfo = $request->firebase_access_token;
+                $nameTemp = explode('@', $firebaseInfo['providerData'][0]['email']??$firebaseInfo['email'])[0];
                 $payload = [
-                    "name" => $firebaseInfo['providerData'][0]['displayName']??$firebaseInfo['displayName'],
+                    "name" => $firebaseInfo['providerData'][0]['displayName']??$firebaseInfo['displayName']??$nameTemp,
                     "picture" => $firebaseInfo['providerData'][0]['photoURL']??$firebaseInfo['photoURL']??null,
                     "iss" => "",
                     "aud" => "sv5t-tvu-ca74b",
