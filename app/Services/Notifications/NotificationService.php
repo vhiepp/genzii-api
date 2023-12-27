@@ -104,7 +104,7 @@ class NotificationService
             if (gettype($user) == 'string') {
                 $user = User::find($user);
             }
-            $notifications = $user->notifications()->where('created_at', '>=', time() - $this->expTimeNewNotification)->orderByDesc('updated_at')->limit($this->limitNewNotification)->get();
+            $notifications = $user->notifications()->where('created_at', '>=', time() - $this->expTimeNewNotification)->selectRaw('*, CAST(created_at AS UNSIGNED) AS created_at_number')->orderByDesc('created_at_number')->limit($this->limitNewNotification)->get();
             return $notifications;
         }
         return null;
