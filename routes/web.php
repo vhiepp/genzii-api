@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function (\Illuminate\Http\Request $request) {
+    $count = 0;
     $posts = Post::selectRaw('*, CAST(created_at AS UNSIGNED) AS created_at_number')->orderByDesc('created_at_number')->limit(50)->get();
     foreach ($posts as $post) {
         if (count($post->media) == 0) {
@@ -23,7 +24,8 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
                 'file_url' => \Vhiepp\VNDataFaker\VNFaker::image(600, 800, $post->caption),
                 'type' => 'image'
             ]);
+            $count++;
         }
     }
-    return "ok";
+    return "ok " . $count;
 });
