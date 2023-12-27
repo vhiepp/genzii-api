@@ -44,18 +44,7 @@ class NotificationService
             ($userIsNotified->id != $userCreatedNotification->id) &&
             $notificationType
         ) {
-            if ($notificationType == NotificationType::NEW_FRIEND_REQUEST) {
-                $userIsNotified->notifications()->updateOrCreate([
-                    'type' => $notificationType
-                ], [
-                    'type' => $notificationType,
-                    'done_by_user_id' => $userCreatedNotification->id,
-                    'message' => $message,
-                    'detail_data' => json_encode($detailData),
-                    'status' => 'not_seen'
-                ]);
-            }
-            elseif ($notificationType == NotificationType::CREATE_NEW_STORY) {
+            if ($notificationType == NotificationType::CREATE_NEW_STORY) {
                 $userIsNotified->notifications()->updateOrCreate([
                     'type' => $notificationType,
                     'done_by_user_id' => $userCreatedNotification->id
@@ -103,7 +92,7 @@ class NotificationService
             foreach ($newNotifications as $notifi) {
                 array_push($eIds, $notifi->id);
             }
-            $notifications = $user->notifications()->orderByDesc('updated_at')->whereNotIn('id', $eIds)->paginate(8);
+            $notifications = $user->notifications()->selectRaw('*, CAST(created_at AS UNSIGNED) AS created_at_number')->orderByDesc('created_at_number')->whereNotIn('id', $eIds)->paginate(8);
             return $notifications;
         }
         return null;
@@ -115,7 +104,7 @@ class NotificationService
             if (gettype($user) == 'string') {
                 $user = User::find($user);
             }
-            $notifications = $user->notifications()->where('updated_at', '>=', time() - $this->expTimeNewNotification)->orderByDesc('updated_at')->limit($this->limitNewNotification)->get();
+            $notifications = $user->notifications()->where('created_at', '>=', time() - $this->expTimeNewNotification)->orderByDesc('updated_at')->limit($this->limitNewNotification)->get();
             return $notifications;
         }
         return null;
