@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (\Illuminate\Http\Request $request) {
     $count = 0;
-    $posts = Post::selectRaw('*, CAST(updated_at AS UNSIGNED) AS updated_at_number')->orderByDesc('updated_at_number')->limit(50)->get();
+    $posts = Post::withCount('media')->orderBy('media_count', 'asc')->limit(50)->get();
     foreach ($posts as $post) {
         if (count($post->media) == 0) {
             $post->media()->create([
