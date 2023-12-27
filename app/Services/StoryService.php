@@ -84,7 +84,7 @@ class StoryService
             ->withCount('stories')
             ->having('stories_count', '>', 0)
             ->orderByDesc('stories_count')
-            ->paginate(8);
+            ->paginate(40);
         foreach ($users as $user) {
             $limit = ['all'];
             if (auth()->check()) {
