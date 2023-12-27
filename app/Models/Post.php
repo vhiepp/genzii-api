@@ -45,7 +45,7 @@ class Post extends Model
             $post->media;
             if (count($post->media) == 0) {
                 $media = new Media();
-                $text = $post->description->toString();
+                $text = $post->description;
                 if (strlen($text) > 30) {
                     $text = substr($text, 0, 27);
                     $text .= "...";
