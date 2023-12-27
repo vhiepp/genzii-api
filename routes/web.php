@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function (\Illuminate\Http\Request $request) {
+    return '123';
     $count = 0;
     $posts = Post::where('status', 'showing')->withCount('media')->orderBy('media_count', 'asc')->limit(10)->get();
     $ids = [];
