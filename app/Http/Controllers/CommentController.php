@@ -28,7 +28,8 @@ class CommentController extends Controller
         try {
             $post = Post::find($id);
             if ($this->postService->isUserHavePermissionToViewPost(auth()->user(), $post)) {
-                $comments = $post->comments()->orderBy('updated_at', 'asc')->paginate(8);
+                $exIds = json_decode($request->exIds??"[]");
+                $comments = $post->comments()->whereNotIn('id', $exIds)->selectRaw('*, CAST(updated_at AS UNSIGNED) AS updated_at_number')->orderByDesc('updated_at_number')->paginate(8);
                 return response()->json(reshelper()->withFormat($comments));
             }
         } catch (\Exception $exception) {}
