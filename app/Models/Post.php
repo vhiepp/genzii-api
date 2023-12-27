@@ -45,11 +45,7 @@ class Post extends Model
             $post->media;
             if (count($post->media) == 0) {
                 $media = new Media();
-                $text = $post->description;
-                if (strlen($text) > 30) {
-                    $text = substr($text, 0, 27);
-                    $text .= "...";
-                }
+                $text = str($post->description)->limit(30);
                 $media->file_url = env('SERVER_IMAGE_URL') . "?w=600&h=800&text=$text&red=240&green=240&blue=240";
                 $media->type = "image";
                 $post->media[] = $media;
